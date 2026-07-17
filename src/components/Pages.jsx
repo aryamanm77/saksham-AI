@@ -119,6 +119,8 @@ export function ExploreTab({ user }) {
 
 export function CreateTab({ user }) {
   const [file, setFile] = useState(null);
+  const [videoUrlInput, setVideoUrlInput] = useState('');
+  const [isUrlMode, setIsUrlMode] = useState(false);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [resourceLink, setResourceLink] = useState('');
@@ -148,57 +150,75 @@ export function CreateTab({ user }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!file || !title) {
-      setMessage("Please select a video and enter a title.");
+    if (!title) {
+      setMessage("Please enter a title.");
+      return;
+    }
+    if (!file && !videoUrlInput) {
+      setMessage("Please provide a video file or URL.");
       return;
     }
 
     setIsUploading(true);
-    setMessage("Uploading to Cloudinary...");
+    let finalVideoUrl = videoUrlInput;
 
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("upload_preset", "ml_default");
+    if (file && !isUrlMode) {
+      setMessage("Uploading to Cloudinary...");
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", "ml_default");
+
+      try {
+        const res = await fetch("https://api.cloudinary.com/v1_1/ft9btave/video/upload", {
+          method: "POST",
+          body: formData,
+        });
+        const data = await res.json();
+
+        if (data.secure_url) {
+          finalVideoUrl = data.secure_url;
+        } else {
+          setMessage("Failed to upload video to Cloudinary. Try pasting a link instead!");
+          setIsUploading(false);
+          return;
+        }
+      } catch (err) {
+        console.error(err);
+        setMessage("An error occurred during upload. Try pasting a link instead!");
+        setIsUploading(false);
+        return;
+      }
+    }
 
     try {
-      // 1. Upload to Cloudinary
-      const res = await fetch("https://api.cloudinary.com/v1_1/ft9btave/video/upload", {
-        method: "POST",
-        body: formData,
+      setMessage("Saving to database...");
+      
+      const reelsRef = ref(db, 'reels');
+      await push(reelsRef, {
+        videoUrl: finalVideoUrl,
+        title: title,
+        description: description,
+        resourceLink: resourceLink || null,
+        creator: {
+          uid: user?.uid || "anonymous",
+          name: user?.displayName || "Anonymous",
+          role: "Creator",
+          avatar: user?.photoURL || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3"
+        },
+        tags: ["New"],
+        createdAt: Date.now()
       });
-      const data = await res.json();
 
-      if (data.secure_url) {
-        setMessage("Saving to database...");
-        
-        // 2. Save metadata to Firebase Realtime Database
-        const reelsRef = ref(db, 'reels');
-        await push(reelsRef, {
-          videoUrl: data.secure_url,
-          title: title,
-          description: description,
-          resourceLink: resourceLink || null,
-          creator: {
-            uid: user?.uid || "anonymous",
-            name: user?.displayName || "Anonymous",
-            role: "Creator",
-            avatar: user?.photoURL || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3"
-          },
-          tags: ["New"],
-          createdAt: Date.now()
-        });
-
-        setMessage("Upload successful!");
-        setFile(null);
-        setTitle('');
-        setDescription('');
-        setResourceLink('');
-      } else {
-        setMessage("Failed to upload video.");
-      }
+      setMessage("Post published successfully!");
+      setFile(null);
+      setVideoUrlInput('');
+      setIsUrlMode(false);
+      setTitle('');
+      setDescription('');
+      setResourceLink('');
     } catch (err) {
       console.error(err);
-      setMessage("An error occurred during upload.");
+      setMessage("An error occurred while saving to Firebase.");
     } finally {
       setIsUploading(false);
     }
@@ -211,7 +231,7 @@ export function CreateTab({ user }) {
         <h1>Upload your AI lesson</h1>
       </header>
       
-      {!file ? (
+      {!file && !isUrlMode ? (
         <div className="create-tools">
           <input 
             type="file" 
@@ -225,11 +245,30 @@ export function CreateTab({ user }) {
             <h3>Upload File</h3>
             <p>MP4, MOV up to 10 mins</p>
           </button>
+          
+          <button className="tool-btn glass-panel" onClick={() => setIsUrlMode(true)} style={{ marginTop: '1rem' }}>
+            <div className="tool-icon upload-icon">🔗</div>
+            <h3>Paste Link</h3>
+            <p>Use a direct MP4 link</p>
+          </button>
         </div>
       ) : (
         <form onSubmit={handleSubmit} className="upload-form">
           <div className="glass-panel" style={{ padding: '1rem', borderRadius: '12px', marginBottom: '1rem' }}>
-            <p style={{ margin: '0 0 1rem 0' }}><strong>Selected:</strong> {file.name}</p>
+            {isUrlMode ? (
+              <input 
+                type="url" 
+                placeholder="Direct Video URL (e.g. https://.../video.mp4)" 
+                value={videoUrlInput}
+                onChange={(e) => setVideoUrlInput(e.target.value)}
+                className="search-input"
+                required
+                style={{ width: '100%', marginBottom: '1rem', padding: '0.8rem', background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px' }}
+              />
+            ) : (
+              <p style={{ margin: '0 0 1rem 0' }}><strong>Selected:</strong> {file?.name}</p>
+            )}
+
             <input 
               type="text" 
               placeholder="Title" 
@@ -256,11 +295,11 @@ export function CreateTab({ user }) {
             <button type="submit" disabled={isUploading} className="pill-button primary" style={{ width: '100%' }}>
               {isUploading ? "Uploading..." : "Publish Video"}
             </button>
-            <button type="button" disabled={isUploading} onClick={() => setFile(null)} className="pill-button" style={{ width: '100%', marginTop: '0.5rem', background: 'transparent', border: '1px solid rgba(255,255,255,0.2)' }}>
+            <button type="button" disabled={isUploading} onClick={() => { setFile(null); setIsUrlMode(false); setVideoUrlInput(''); setMessage(''); }} className="pill-button" style={{ width: '100%', marginTop: '0.5rem', background: 'transparent', border: '1px solid rgba(255,255,255,0.2)' }}>
               Cancel
             </button>
-            {message && <p style={{ marginTop: '1rem', fontSize: '0.9rem', color: 'var(--brand-green)' }}>{message}</p>}
           </div>
+          {message && <p style={{ textAlign: 'center', marginTop: '1rem', color: message.includes("successful") ? '#4caf50' : '#ff5252' }}>{message}</p>}
         </form>
       )}
     </div>
