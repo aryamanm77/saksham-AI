@@ -61,7 +61,6 @@ function App() {
         <Route path="/profile" element={<ProfileTab user={user} />} />
       </Routes>
       <BottomNav />
-      {!user && <Login />}
     </Router>
   );
 }

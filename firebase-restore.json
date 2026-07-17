@@ -1,7 +1,7 @@
 {
   "reels": {
     "post_1": {
-      "videoUrl": "https://storage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",
+      "videoUrl": "https://media.w3.org/2010/05/sintel/trailer.mp4",
       "title": "Introduction to DSA in Computer Science",
       "description": "Understanding Big O notation and why data structures matter for scaling applications.",
       "tags": ["DSA", "ComputerScience", "Algorithms"],
@@ -9,7 +9,7 @@
       "timestamp": 1690000000000
     },
     "post_2": {
-      "videoUrl": "https://storage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4",
+      "videoUrl": "https://res.cloudinary.com/demo/video/upload/rafting.mp4",
       "title": "How Hash Tables Actually Work",
       "description": "A deep dive into hash functions, collision resolution, and O(1) lookup times.",
       "tags": ["DataStructures", "HashTables", "Coding"],
@@ -17,7 +17,7 @@
       "timestamp": 1690000001000
     },
     "post_3": {
-      "videoUrl": "https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+      "videoUrl": "https://media.w3.org/2010/05/sintel/trailer.mp4",
       "title": "Machine Learning: Neural Networks",
       "description": "The math behind forward propagation and activation functions.",
       "tags": ["MachineLearning", "AI", "Math"],
@@ -25,7 +25,7 @@
       "timestamp": 1690000002000
     },
     "post_4": {
-      "videoUrl": "https://storage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+      "videoUrl": "https://res.cloudinary.com/demo/video/upload/rafting.mp4",
       "title": "Graph Algorithms: Dijkstra's",
       "description": "Finding the shortest path in a weighted graph. Essential for routing and maps.",
       "tags": ["Algorithms", "Graphs", "DSA"],
@@ -33,7 +33,7 @@
       "timestamp": 1690000003000
     },
     "post_5": {
-      "videoUrl": "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+      "videoUrl": "https://media.w3.org/2010/05/sintel/trailer.mp4",
       "title": "Operating Systems: Virtual Memory",
       "description": "How the OS fakes infinite RAM using paging and disk swapping.",
       "tags": ["OS", "Architecture", "Systems"],
@@ -41,7 +41,7 @@
       "timestamp": 1690000004000
     },
     "post_6": {
-      "videoUrl": "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
+      "videoUrl": "https://res.cloudinary.com/demo/video/upload/rafting.mp4",
       "title": "Database Design: Normalization",
       "description": "Structuring relational databases to 3NF to eliminate data redundancy.",
       "tags": ["SQL", "Databases", "Design"],
@@ -49,7 +49,7 @@
       "timestamp": 1690000005000
     },
     "post_7": {
-      "videoUrl": "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
+      "videoUrl": "https://media.w3.org/2010/05/sintel/trailer.mp4",
       "title": "Dynamic Programming Basics",
       "description": "Memoization vs Tabulation: Breaking down complex problems into subproblems.",
       "tags": ["DP", "Algorithms", "Interview"],
@@ -57,7 +57,7 @@
       "timestamp": 1690000006000
     },
     "post_8": {
-      "videoUrl": "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4",
+      "videoUrl": "https://res.cloudinary.com/demo/video/upload/rafting.mp4",
       "title": "Computer Networks: TCP/IP",
       "description": "How packets travel across the internet using the TCP/IP model.",
       "tags": ["Networking", "TCP", "Internet"],
@@ -65,7 +65,7 @@
       "timestamp": 1690000007000
     },
     "post_9": {
-      "videoUrl": "https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4",
+      "videoUrl": "https://media.w3.org/2010/05/sintel/trailer.mp4",
       "title": "Cryptography: Public Key Encryption",
       "description": "Understanding RSA and how SSL/TLS keeps web traffic secure.",
       "tags": ["Security", "Crypto", "Web"],
@@ -73,7 +73,7 @@
       "timestamp": 1690000008000
     },
     "post_10": {
-      "videoUrl": "https://storage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4",
+      "videoUrl": "https://res.cloudinary.com/demo/video/upload/rafting.mp4",
       "title": "System Design: Microservices",
       "description": "Scaling architectures by breaking monoliths into distributed microservices.",
       "tags": ["SystemDesign", "Architecture", "Backend"],

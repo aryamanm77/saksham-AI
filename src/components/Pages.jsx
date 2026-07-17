@@ -5,6 +5,7 @@ import { signOut } from 'firebase/auth';
 import { Search } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import ReelCard from './ReelCard';
+import Login from './Login';
 import './Pages.css';
 
 export function ExploreTab({ user }) {
@@ -124,6 +125,16 @@ export function CreateTab({ user }) {
   const [isUploading, setIsUploading] = useState(false);
   const [message, setMessage] = useState('');
   const fileInputRef = useRef(null);
+
+  if (!user) {
+    return (
+      <div className="page-container" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100vh', textAlign: 'center', padding: '2rem' }}>
+        <h2 style={{ marginBottom: '1rem' }}>Login to Post</h2>
+        <p style={{ color: 'var(--text-secondary)', marginBottom: '2rem' }}>You need an account to upload videos and share knowledge.</p>
+        <Login />
+      </div>
+    );
+  }
 
   const handleUploadClick = () => {
     fileInputRef.current?.click();
@@ -295,6 +306,16 @@ export function ProfileTab({ user }) {
   const [profileData, setProfileData] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [editForm, setEditForm] = useState({ name: '', handle: '', bio: '' });
+
+  if (!user) {
+    return (
+      <div className="page-container" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100vh', textAlign: 'center', padding: '2rem' }}>
+        <h2 style={{ marginBottom: '1rem' }}>Login to view Profile</h2>
+        <p style={{ color: 'var(--text-secondary)', marginBottom: '2rem' }}>You need an account to view and edit your profile.</p>
+        <Login />
+      </div>
+    );
+  }
 
   useEffect(() => {
     if (user) {
