@@ -1,0 +1,138 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root {
+  --bg-dark: #0a0a0a;
+  --bg-panel: rgba(25, 25, 25, 0.7);
+  --text-primary: #ffffff;
+  --text-secondary: #a0a0a0;
+  --brand-green: #00e676;
+  --brand-cyan: #00e5ff;
+  --pill-bg: rgba(255, 255, 255, 0.15);
+  --pill-bg-hover: rgba(255, 255, 255, 0.25);
+  
+  font-family: 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color: var(--text-primary);
+  background-color: var(--bg-dark);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  /* Cool gradient background for desktop view to highlight the mobile container */
+  background: linear-gradient(135deg, #cde4e2 0%, #101c2a 100%);
+  overflow: hidden;
+}
+
+#root {
+  width: 100%;
+  max-width: 430px; /* Mobile width */
+  height: 100vh;
+  max-height: 932px; /* Pro Max height */
+  background-color: var(--bg-dark);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+@media (min-width: 480px) {
+  #root {
+    height: 90vh;
+    border-radius: 40px;
+    border: 8px solid #1a1a1a;
+  }
+}
+
+/* Typography */
+h1 {
+  font-size: 2rem;
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 0.5rem;
+}
+
+h2 {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+p {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+}
+
+/* Utility Classes */
+.glass-panel {
+  background: var(--bg-panel);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.pill-button {
+  background: var(--pill-bg);
+  color: var(--text-primary);
+  border: none;
+  border-radius: 999px;
+  padding: 0.4rem 0.8rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.pill-button:hover {
+  background: var(--pill-bg-hover);
+}
+
+.pill-button.primary {
+  background: var(--text-primary);
+  color: var(--bg-dark);
+}
+
+.pill-button.primary:hover {
+  background: #e0e0e0;
+}
+
+/* Animations */
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.slide-up {
+  animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Custom Scrollbar for hiding it but keeping functionality */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}

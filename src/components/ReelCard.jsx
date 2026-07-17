@@ -1,0 +1,90 @@
+import React, { useState } from 'react';
+import { Heart, MessageCircle, Repeat2, Send, Bookmark, Library } from 'lucide-react';
+import './ReelCard.css';
+
+export default function ReelCard({ videoUrl, creator, title, description, tags, isPlaying }) {
+  const [liked, setLiked] = useState(false);
+  const [saved, setSaved] = useState(false);
+
+  return (
+    <div className="reel-card">
+      <div className="video-container">
+        {/* Placeholder for actual video player */}
+        <div className="video-placeholder" style={{ backgroundImage: `url(${videoUrl})` }}>
+           {!isPlaying && <div className="play-overlay">▶</div>}
+        </div>
+      </div>
+
+      <div className="auto-play-pill glass-panel">
+        Auto playing • 1/4
+      </div>
+
+      <div className="reel-overlay">
+        <div className="reel-info glass-panel">
+          <div className="creator-row">
+            <img src={creator.avatar} alt={creator.name} className="creator-avatar" />
+            <div className="creator-details">
+              <h4>{creator.name}</h4>
+              <p>{creator.role}</p>
+            </div>
+            <button className="pill-button primary follow-btn">Follow</button>
+          </div>
+          
+          <div className="tags-row">
+            <span className="tag-pill brand-green">
+              {tags.join(' • ')}
+            </span>
+          </div>
+
+          <h2 className="reel-title">{title}</h2>
+          <p className="reel-description">{description}</p>
+
+          <div className="reel-stats-row">
+            <span className="stat-pill glass-panel">00:58 video</span>
+            <span className="stat-pill glass-panel">4 min practice</span>
+            <span className="stat-pill glass-panel">Machine Learning</span>
+          </div>
+        </div>
+
+        <div className="action-buttons">
+          <button className="action-btn" onClick={() => setLiked(!liked)}>
+            <div className={`icon-container glass-panel ${liked ? 'active-heart' : ''}`}>
+              <Heart fill={liked ? 'currentColor' : 'none'} size={22} />
+            </div>
+            <span>{liked ? '28.1k' : '28k'}</span>
+          </button>
+          <button className="action-btn">
+            <div className="icon-container glass-panel">
+              <MessageCircle size={22} />
+            </div>
+            <span>912</span>
+          </button>
+          <button className="action-btn">
+            <div className="icon-container glass-panel">
+              <Repeat2 size={22} />
+            </div>
+            <span>Repost</span>
+          </button>
+          <button className="action-btn">
+            <div className="icon-container glass-panel">
+              <Send size={22} />
+            </div>
+            <span>Share</span>
+          </button>
+          <button className="action-btn" onClick={() => setSaved(!saved)}>
+            <div className={`icon-container glass-panel ${saved ? 'active-star' : ''}`}>
+              <Bookmark fill={saved ? 'currentColor' : 'none'} size={22} />
+            </div>
+            <span>Save</span>
+          </button>
+          <button className="action-btn resources-btn">
+            <div className="icon-container glass-panel brand-bg">
+              <div className="stacked-books">📚</div>
+            </div>
+            <span>Resources</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
