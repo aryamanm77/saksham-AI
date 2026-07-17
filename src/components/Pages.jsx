@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { db } from '../firebase';
+import { db, auth } from '../firebase';
 import { ref, push, get, set, onValue } from 'firebase/database';
+import { signOut } from 'firebase/auth';
 import { Search } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import ReelCard from './ReelCard';
@@ -306,6 +307,25 @@ export function ProfileTab({ user }) {
             handle: snapshot.val().handle || '',
             bio: snapshot.val().bio || ''
           });
+        } else {
+          // Fallback if they accidentally deleted their database node
+          const fallbackData = {
+            uid: user.uid,
+            displayName: user.displayName || 'Anonymous',
+            email: user.email,
+            photoURL: user.photoURL,
+            handle: '@' + (user.email ? user.email.split('@')[0] : 'user'),
+            bio: 'New user.',
+            xp: 0,
+            followers: 0,
+            following: 0
+          };
+          setProfileData(fallbackData);
+          setEditForm({
+            name: fallbackData.displayName,
+            handle: fallbackData.handle,
+            bio: fallbackData.bio
+          });
         }
       });
     }
@@ -351,7 +371,10 @@ export function ProfileTab({ user }) {
             <>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                 <h2>{profileData.displayName}</h2>
-                <button onClick={() => setIsEditing(true)} style={{ background: 'rgba(255,255,255,0.1)', border: 'none', color: 'white', padding: '0.3rem 0.8rem', borderRadius: '99px', fontSize: '0.8rem', cursor: 'pointer' }}>Edit</button>
+                <div style={{ display: 'flex', gap: '0.5rem' }}>
+                  <button onClick={() => setIsEditing(true)} style={{ background: 'rgba(255,255,255,0.1)', border: 'none', color: 'white', padding: '0.3rem 0.8rem', borderRadius: '99px', fontSize: '0.8rem', cursor: 'pointer' }}>Edit</button>
+                  <button onClick={() => signOut(auth)} style={{ background: 'rgba(244, 67, 54, 0.2)', border: 'none', color: '#ff5252', padding: '0.3rem 0.8rem', borderRadius: '99px', fontSize: '0.8rem', cursor: 'pointer' }}>Logout</button>
+                </div>
               </div>
               <p className="profile-handle">{profileData.handle}</p>
               <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: '0 0 0.8rem 0' }}>{profileData.bio}</p>
