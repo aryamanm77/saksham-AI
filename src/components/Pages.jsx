@@ -124,6 +124,7 @@ export function CreateTab({ user }) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [resourceLink, setResourceLink] = useState('');
+  const [resourceFile, setResourceFile] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
   const [message, setMessage] = useState('');
   const fileInputRef = useRef(null);
@@ -190,6 +191,33 @@ export function CreateTab({ user }) {
       }
     }
 
+    let finalResourceUrl = resourceLink;
+
+    if (resourceFile) {
+      setMessage("Uploading resource file...");
+      const resourceFormData = new FormData();
+      resourceFormData.append("file", resourceFile);
+      resourceFormData.append("upload_preset", "ml_default");
+
+      try {
+        // Use auto or raw for non-video/image files
+        const res = await fetch("https://api.cloudinary.com/v1_1/ft9btave/auto/upload", {
+          method: "POST",
+          body: resourceFormData,
+        });
+        const data = await res.json();
+        
+        if (data.secure_url) {
+          finalResourceUrl = data.secure_url;
+        } else {
+          console.warn("Resource upload failed:", data);
+          setMessage("Failed to upload resource file, but continuing with video...");
+        }
+      } catch (err) {
+        console.error("Resource upload error:", err);
+      }
+    }
+
     try {
       setMessage("Saving to database...");
       
@@ -198,7 +226,7 @@ export function CreateTab({ user }) {
         videoUrl: finalVideoUrl,
         title: title,
         description: description,
-        resourceLink: resourceLink || null,
+        resourceLink: finalResourceUrl || null,
         creator: {
           uid: user?.uid || "anonymous",
           name: user?.displayName || "Anonymous",
@@ -211,6 +239,7 @@ export function CreateTab({ user }) {
 
       setMessage("Post published successfully!");
       setFile(null);
+      setResourceFile(null);
       setVideoUrlInput('');
       setIsUrlMode(false);
       setTitle('');
@@ -284,18 +313,32 @@ export function CreateTab({ user }) {
               className="search-input"
               style={{ width: '100%', marginBottom: '1rem', padding: '0.8rem', background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', minHeight: '80px' }}
             />
-            <input 
-              type="url" 
-              placeholder="Resource Link (e.g. GitHub repo, PDF) (optional)" 
-              value={resourceLink}
-              onChange={(e) => setResourceLink(e.target.value)}
-              className="search-input"
-              style={{ width: '100%', marginBottom: '1rem', padding: '0.8rem', background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px' }}
-            />
+            
+            <div style={{ marginBottom: '1rem', padding: '0.8rem', background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px' }}>
+              <p style={{ margin: '0 0 0.5rem 0', fontSize: '0.9rem' }}><strong>Attach Resource (PDF, DOC, PPT)</strong></p>
+              <input 
+                type="file" 
+                accept=".pdf,.doc,.docx,.ppt,.pptx"
+                onChange={(e) => {
+                  if (e.target.files && e.target.files[0]) setResourceFile(e.target.files[0]);
+                }}
+                style={{ fontSize: '0.9rem', width: '100%' }}
+              />
+              <p style={{ margin: '0.5rem 0', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>OR paste a link:</p>
+              <input 
+                type="url" 
+                placeholder="Resource Link (e.g. GitHub repo) (optional)" 
+                value={resourceLink}
+                onChange={(e) => setResourceLink(e.target.value)}
+                className="search-input"
+                style={{ width: '100%', padding: '0.5rem', background: 'rgba(255,255,255,0.1)', border: 'none', borderRadius: '4px' }}
+              />
+            </div>
+
             <button type="submit" disabled={isUploading} className="pill-button primary" style={{ width: '100%' }}>
               {isUploading ? "Uploading..." : "Publish Video"}
             </button>
-            <button type="button" disabled={isUploading} onClick={() => { setFile(null); setIsUrlMode(false); setVideoUrlInput(''); setMessage(''); }} className="pill-button" style={{ width: '100%', marginTop: '0.5rem', background: 'transparent', border: '1px solid rgba(255,255,255,0.2)' }}>
+            <button type="button" disabled={isUploading} onClick={() => { setFile(null); setResourceFile(null); setIsUrlMode(false); setVideoUrlInput(''); setMessage(''); }} className="pill-button" style={{ width: '100%', marginTop: '0.5rem', background: 'transparent', border: '1px solid rgba(255,255,255,0.2)' }}>
               Cancel
             </button>
           </div>
