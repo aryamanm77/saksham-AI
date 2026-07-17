@@ -11,8 +11,8 @@ const firebaseConfig = {
   storageBucket: "saksham-ai-50820.firebasestorage.app",
   messagingSenderId: "724876360668",
   appId: "1:724876360668:web:75349a395594d0fdf1ed19",
-  // NOTE: If your database is not in the US, you may need to update this URL from your Firebase Console.
-  databaseURL: "https://saksham-ai-50820-default-rtdb.firebaseio.com"
+  // Updated to Asia region based on your previous project
+  databaseURL: "https://saksham-ai-50820-default-rtdb.asia-southeast1.firebasedatabase.app"
 };
 
 // Initialize Firebase
