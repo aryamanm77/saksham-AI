@@ -65,6 +65,7 @@ export default function ReelFeed({ user }) {
               key={reel.id}
               {...reel}
               isPlaying={false} 
+              currentUser={user}
             />
           ))
         )}

@@ -1,10 +1,20 @@
 import React, { useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { Home, Compass, PlusSquare, Users, User, Search } from 'lucide-react';
 import './TopNavbar.css';
 
 export default function TopNavbar() {
   const [searchFocused, setSearchFocused] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const navigate = useNavigate();
+
+  const handleSearch = (e) => {
+    if (e.key === 'Enter' && searchQuery.trim()) {
+      navigate(`/explore?q=${encodeURIComponent(searchQuery.trim())}`);
+      setSearchQuery("");
+      e.target.blur();
+    }
+  };
 
   return (
     <nav className="top-navbar">
@@ -21,8 +31,11 @@ export default function TopNavbar() {
           <input 
             type="text" 
             placeholder="Search posts, skills, or creators" 
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
             onFocus={() => setSearchFocused(true)}
             onBlur={() => setSearchFocused(false)}
+            onKeyDown={handleSearch}
           />
         </div>
 

@@ -1,14 +1,60 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { db } from '../firebase';
-import { ref, push, get, set } from 'firebase/database';
+import { ref, push, get, set, onValue } from 'firebase/database';
 import { Search } from 'lucide-react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import ReelCard from './ReelCard';
 import './Pages.css';
 
-export function ExploreTab() {
+export function ExploreTab({ user }) {
   const categories = [
     'Engineering', 'Programming', 'AI', 'Data Science', 
     'Finance', 'Design', 'Interview Prep', 'Hackathons'
   ];
+
+  const location = useLocation();
+  const navigate = useNavigate();
+  const searchParams = new URLSearchParams(location.search);
+  const initialQuery = searchParams.get('q') || '';
+  
+  const [searchQuery, setSearchQuery] = useState(initialQuery);
+  const [reels, setReels] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    setSearchQuery(initialQuery);
+    if (initialQuery) {
+      setLoading(true);
+      const reelsRef = ref(db, 'reels');
+      get(reelsRef).then((snapshot) => {
+        const data = snapshot.val();
+        if (data) {
+          const reelsArray = Object.keys(data).map(key => ({
+            id: key,
+            ...data[key]
+          }));
+          
+          const lowerQuery = initialQuery.toLowerCase();
+          const filtered = reelsArray.filter(r => 
+            (r.title && r.title.toLowerCase().includes(lowerQuery)) ||
+            (r.description && r.description.toLowerCase().includes(lowerQuery)) ||
+            (r.tags && r.tags.some(t => t.toLowerCase().includes(lowerQuery))) ||
+            (r.creator && r.creator.name && r.creator.name.toLowerCase().includes(lowerQuery))
+          );
+          setReels(filtered.reverse());
+        }
+        setLoading(false);
+      }).catch(() => setLoading(false));
+    } else {
+      setReels([]);
+    }
+  }, [initialQuery]);
+
+  const handleSearch = (e) => {
+    if (e.key === 'Enter') {
+      navigate(`/explore?q=${encodeURIComponent(searchQuery.trim())}`);
+    }
+  };
 
   return (
     <div className="page-container">
@@ -19,22 +65,52 @@ export function ExploreTab() {
       
       <div className="search-bar glass-panel">
         <Search size={18} className="search-icon" />
-        <input type="text" placeholder="Search AI, internships, hackathons..." className="search-input" />
+        <input 
+          type="text" 
+          placeholder="Search AI, internships, hackathons..." 
+          className="search-input" 
+          value={searchQuery}
+          onChange={e => setSearchQuery(e.target.value)}
+          onKeyDown={handleSearch}
+        />
       </div>
 
-      <div className="categories-grid">
-        {categories.map(cat => (
-          <button key={cat} className="category-btn glass-panel">{cat}</button>
-        ))}
-      </div>
-
-      <div className="roadmap-card glass-panel">
-        <div className="roadmap-icon"></div>
-        <div className="roadmap-info">
-          <h3>Live roadmap: GenAI Builder</h3>
-          <p>7 reels, 3 projects, 1 mentor review</p>
+      {initialQuery ? (
+        <div className="search-results">
+          <h3 style={{ margin: '1rem 0' }}>Search Results for "{initialQuery}"</h3>
+          {loading ? (
+            <p>Searching...</p>
+          ) : reels.length > 0 ? (
+            reels.map(reel => (
+              <ReelCard key={reel.id} {...reel} isPlaying={false} currentUser={user} />
+            ))
+          ) : (
+            <p>No posts found matching your search.</p>
+          )}
         </div>
-      </div>
+      ) : (
+        <>
+          <div className="categories-grid">
+            {categories.map(cat => (
+              <button 
+                key={cat} 
+                className="category-btn glass-panel"
+                onClick={() => navigate(`/explore?q=${encodeURIComponent(cat)}`)}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+
+          <div className="roadmap-card glass-panel">
+            <div className="roadmap-icon"></div>
+            <div className="roadmap-info">
+              <h3>Live roadmap: GenAI Builder</h3>
+              <p>7 reels, 3 projects, 1 mentor review</p>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }

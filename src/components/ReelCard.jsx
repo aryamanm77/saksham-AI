@@ -1,12 +1,21 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { ThumbsUp, MessageSquare, Repeat2, Send, Bookmark, Library, MoreHorizontal } from 'lucide-react';
 import './ReelCard.css';
+import { db } from '../firebase';
+import { ref, onValue, set, remove } from 'firebase/database';
+import Comments from './Comments';
 
-export default function ReelCard({ videoUrl, creator, title, description, tags, resourceLink, isPlaying }) {
+export default function ReelCard({ id, videoUrl, creator, title, description, tags, resourceLink, isPlaying, currentUser }) {
   const [activeReaction, setActiveReaction] = useState(null);
+  const [totalReactions, setTotalReactions] = useState(0);
   const [showReactions, setShowReactions] = useState(false);
+  
   const [reposted, setReposted] = useState(false);
-  const [saved, setSaved] = useState(false);
+  const [totalReposts, setTotalReposts] = useState(0);
+  
+  const [totalComments, setTotalComments] = useState(0);
+  const [showComments, setShowComments] = useState(false);
+  
   const videoRef = useRef(null);
 
   useEffect(() => {
@@ -18,7 +27,99 @@ export default function ReelCard({ videoUrl, creator, title, description, tags, 
       }
     }
   }, [isPlaying]);
+  useEffect(() => {
+    if (!id) return;
+    
+    // Listen for Reactions (Likes)
+    const reactionsRef = ref(db, `likes/${id}`);
+    const unsubReactions = onValue(reactionsRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        setTotalReactions(Object.keys(data).length);
+        if (currentUser && data[currentUser.uid]) {
+          setActiveReaction(data[currentUser.uid]);
+        } else {
+          setActiveReaction(null);
+        }
+      } else {
+        setTotalReactions(0);
+        setActiveReaction(null);
+      }
+    });
 
+    // Listen for Reposts
+    const repostsRef = ref(db, `reposts/${id}`);
+    const unsubReposts = onValue(repostsRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        setTotalReposts(Object.keys(data).length);
+        if (currentUser && data[currentUser.uid]) {
+          setReposted(true);
+        } else {
+          setReposted(false);
+        }
+      } else {
+        setTotalReposts(0);
+        setReposted(false);
+      }
+    });
+    
+    // Listen for Comments count
+    const commentsRef = ref(db, `comments/${id}`);
+    const unsubComments = onValue(commentsRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        setTotalComments(Object.keys(data).length);
+      } else {
+        setTotalComments(0);
+      }
+    });
+
+    return () => {
+      unsubReactions();
+      unsubReposts();
+      unsubComments();
+    };
+  }, [id, currentUser]);
+
+  const handleReaction = (reactionType) => {
+    if (!currentUser) return alert("Please log in to react!");
+    if (activeReaction === reactionType || (!reactionType && activeReaction)) {
+      // Remove reaction
+      remove(ref(db, `likes/${id}/${currentUser.uid}`));
+    } else {
+      // Add/Update reaction
+      set(ref(db, `likes/${id}/${currentUser.uid}`), reactionType || '👍');
+    }
+    setShowReactions(false);
+  };
+
+  const handleRepost = () => {
+    if (!currentUser) return alert("Please log in to repost!");
+    if (reposted) {
+      remove(ref(db, `reposts/${id}/${currentUser.uid}`));
+    } else {
+      set(ref(db, `reposts/${id}/${currentUser.uid}`), true);
+    }
+  };
+
+  const handleShare = async () => {
+    const url = window.location.href; // In production this could link to specific post ?id=...
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: title,
+          text: description,
+          url: url,
+        });
+      } catch (err) {
+        console.error("Error sharing:", err);
+      }
+    } else {
+      navigator.clipboard.writeText(url);
+      alert("Link copied to clipboard!");
+    }
+  };
   // Format tags safely
   const formattedTags = tags ? tags.join(' • ') : '';
 
@@ -61,8 +162,8 @@ export default function ReelCard({ videoUrl, creator, title, description, tags, 
       </div>
 
       <div className="post-stats">
-        <span>{activeReaction ? '28,142' : '28,141'} reactions</span>
-        <span>912 comments • {reposted ? '143' : '142'} reposts</span>
+        <span>{totalReactions > 0 ? `${totalReactions} reactions` : 'Be the first to react'}</span>
+        <span>{totalComments} comments • {totalReposts} reposts</span>
       </div>
 
       <div className="post-actions">
@@ -73,16 +174,16 @@ export default function ReelCard({ videoUrl, creator, title, description, tags, 
         >
           {showReactions && (
             <div className="reaction-popup">
-              <button onClick={() => { setActiveReaction('👍'); setShowReactions(false); }}>👍</button>
-              <button onClick={() => { setActiveReaction('🎉'); setShowReactions(false); }}>🎉</button>
-              <button onClick={() => { setActiveReaction('🤝'); setShowReactions(false); }}>🤝</button>
-              <button onClick={() => { setActiveReaction('❤️'); setShowReactions(false); }}>❤️</button>
-              <button onClick={() => { setActiveReaction('💡'); setShowReactions(false); }}>💡</button>
+              <button onClick={() => handleReaction('👍')}>👍</button>
+              <button onClick={() => handleReaction('🎉')}>🎉</button>
+              <button onClick={() => handleReaction('🤝')}>🤝</button>
+              <button onClick={() => handleReaction('❤️')}>❤️</button>
+              <button onClick={() => handleReaction('💡')}>💡</button>
             </div>
           )}
           <button 
             className={`action-btn ${activeReaction ? 'active-reaction' : ''}`}
-            onClick={() => setActiveReaction(activeReaction ? null : '👍')}
+            onClick={() => handleReaction(activeReaction ? null : '👍')}
           >
             {activeReaction ? (
               <span style={{ fontSize: '1.2rem' }}>{activeReaction}</span>
@@ -93,17 +194,17 @@ export default function ReelCard({ videoUrl, creator, title, description, tags, 
           </button>
         </div>
         
-        <button className="action-btn">
+        <button className="action-btn" onClick={() => setShowComments(!showComments)}>
           <MessageSquare size={20} />
           <span>Comment</span>
         </button>
         
-        <button className={`action-btn ${reposted ? 'active-reaction' : ''}`} onClick={() => setReposted(!reposted)}>
+        <button className={`action-btn ${reposted ? 'active-reaction' : ''}`} onClick={handleRepost}>
           <Repeat2 size={20} />
           <span>Repost</span>
         </button>
         
-        <button className="action-btn">
+        <button className="action-btn" onClick={handleShare}>
           <Send size={20} />
           <span>Send</span>
         </button>
@@ -115,6 +216,10 @@ export default function ReelCard({ videoUrl, creator, title, description, tags, 
           </button>
         )}
       </div>
+
+      {showComments && (
+        <Comments postId={id} currentUser={currentUser} />
+      )}
     </div>
   );
 }

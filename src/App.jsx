@@ -61,7 +61,7 @@ function App() {
       <main className="main-layout">
         <Routes>
           <Route path="/" element={<ReelFeed user={user} />} />
-          <Route path="/explore" element={<ExploreTab />} />
+          <Route path="/explore" element={<ExploreTab user={user} />} />
           <Route path="/create" element={<CreateTab user={user} />} />
           <Route path="/community" element={<CommunityTab user={user} />} />
           <Route path="/profile" element={<ProfileTab user={user} />} />
