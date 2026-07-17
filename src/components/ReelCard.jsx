@@ -2,7 +2,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import { ThumbsUp, MessageSquare, Repeat2, Send, Library, Plus } from 'lucide-react';
 import './ReelCard.css';
 import { db } from '../firebase';
-import { ref, onValue, set, remove } from 'firebase/database';
+import { ref, onValue, set, remove, update } from 'firebase/database';
+import { Pencil } from 'lucide-react';
 import Comments from './Comments';
 
 export default function ReelCard({ id, videoUrl, creator, title, description, tags, resourceLink, isPlaying, currentUser }) {
@@ -15,6 +16,14 @@ export default function ReelCard({ id, videoUrl, creator, title, description, ta
   
   const [totalComments, setTotalComments] = useState(0);
   const [showComments, setShowComments] = useState(false);
+  
+  const [isEditing, setIsEditing] = useState(false);
+  const [editForm, setEditForm] = useState({ 
+    title: title || '', 
+    description: description || '', 
+    videoUrl: videoUrl || '', 
+    resourceLink: resourceLink || '' 
+  });
   
   const videoRef = useRef(null);
 
@@ -122,7 +131,24 @@ export default function ReelCard({ id, videoUrl, creator, title, description, ta
     }
   };
 
+  const handleUpdate = async (e) => {
+    e.preventDefault();
+    try {
+      await update(ref(db, `reels/${id}`), {
+        title: editForm.title,
+        description: editForm.description,
+        videoUrl: editForm.videoUrl,
+        resourceLink: editForm.resourceLink || null
+      });
+      setIsEditing(false);
+    } catch (err) {
+      console.error("Failed to update post:", err);
+      alert("Failed to update post.");
+    }
+  };
+
   const formattedTags = tags ? tags.map(t => `#${t}`).join(' ') : '';
+  const isOwner = currentUser && currentUser.uid === creator?.uid;
 
   return (
     <div className="reel-card">
@@ -199,7 +225,46 @@ export default function ReelCard({ id, videoUrl, creator, title, description, ta
             </button>
           </div>
         )}
+
+        {isOwner && (
+          <div className="action-button-wrapper">
+            <button className="action-btn" onClick={() => setIsEditing(true)}>
+              <div className="icon-circle" style={{ background: 'rgba(255,255,255,0.1)' }}>
+                <Pencil size={24} />
+              </div>
+              <span>Edit</span>
+            </button>
+          </div>
+        )}
       </div>
+
+      {isEditing && (
+        <div className="comments-bottom-sheet" style={{ zIndex: 100, height: '70vh', background: 'var(--surface-color)', padding: '1rem' }}>
+          <div className="comments-sheet-header">
+            <h4>Edit Post</h4>
+            <button onClick={() => setIsEditing(false)} className="close-btn">×</button>
+          </div>
+          <form onSubmit={handleUpdate} style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1rem' }}>
+            <div>
+              <label style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Title</label>
+              <input type="text" value={editForm.title} onChange={e => setEditForm({...editForm, title: e.target.value})} className="search-input" style={{ width: '100%', padding: '0.8rem', marginTop: '0.3rem', background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px' }} required />
+            </div>
+            <div>
+              <label style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Description</label>
+              <textarea value={editForm.description} onChange={e => setEditForm({...editForm, description: e.target.value})} className="search-input" style={{ width: '100%', padding: '0.8rem', marginTop: '0.3rem', background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', minHeight: '60px' }} />
+            </div>
+            <div>
+              <label style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Video URL</label>
+              <input type="url" value={editForm.videoUrl} onChange={e => setEditForm({...editForm, videoUrl: e.target.value})} className="search-input" style={{ width: '100%', padding: '0.8rem', marginTop: '0.3rem', background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px' }} required />
+            </div>
+            <div>
+              <label style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Resource URL</label>
+              <input type="url" value={editForm.resourceLink} onChange={e => setEditForm({...editForm, resourceLink: e.target.value})} className="search-input" style={{ width: '100%', padding: '0.8rem', marginTop: '0.3rem', background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px' }} />
+            </div>
+            <button type="submit" className="pill-button primary" style={{ padding: '0.8rem' }}>Save Changes</button>
+          </form>
+        </div>
+      )}
 
       {/* Bottom overlay info */}
       <div className="reel-info">
