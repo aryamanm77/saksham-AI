@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
+import { db } from '../firebase';
+import { ref, push } from 'firebase/database';
 import { Search } from 'lucide-react';
 import './Pages.css';
 
@@ -38,30 +40,129 @@ export function ExploreTab() {
 }
 
 export function CreateTab() {
+  const [file, setFile] = useState(null);
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [isUploading, setIsUploading] = useState(false);
+  const [message, setMessage] = useState('');
+  const fileInputRef = useRef(null);
+
+  const handleUploadClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      setFile(e.target.files[0]);
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!file || !title) {
+      setMessage("Please select a video and enter a title.");
+      return;
+    }
+
+    setIsUploading(true);
+    setMessage("Uploading to Cloudinary...");
+
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", "ml_default");
+
+    try {
+      // 1. Upload to Cloudinary
+      const res = await fetch("https://api.cloudinary.com/v1_1/ft9btave/video/upload", {
+        method: "POST",
+        body: formData,
+      });
+      const data = await res.json();
+
+      if (data.secure_url) {
+        setMessage("Saving to database...");
+        
+        // 2. Save metadata to Firebase Realtime Database
+        const reelsRef = ref(db, 'reels');
+        await push(reelsRef, {
+          videoUrl: data.secure_url,
+          title: title,
+          description: description,
+          creator: {
+            name: "Aryaman (You)",
+            role: "Developer",
+            avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&auto=format&fit=crop&w=256&q=80"
+          },
+          tags: ["New"],
+          createdAt: Date.now()
+        });
+
+        setMessage("Upload successful!");
+        setFile(null);
+        setTitle('');
+        setDescription('');
+      } else {
+        setMessage("Failed to upload video.");
+      }
+    } catch (err) {
+      console.error(err);
+      setMessage("An error occurred during upload.");
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
   return (
     <div className="page-container">
       <header className="page-header">
         <span className="small-caps">CREATE</span>
-        <h1>Record or upload your AI lesson</h1>
+        <h1>Upload your AI lesson</h1>
       </header>
       
-      <div className="create-tools">
-        <button className="tool-btn glass-panel">
-          <div className="tool-icon camera-icon">🎥</div>
-          <h3>Record Video</h3>
-          <p>Use AI filters and teleprompter</p>
-        </button>
-        <button className="tool-btn glass-panel">
-          <div className="tool-icon upload-icon">📤</div>
-          <h3>Upload File</h3>
-          <p>MP4, MOV up to 10 mins</p>
-        </button>
-        <button className="tool-btn glass-panel generate-btn">
-          <div className="tool-icon sparkle-icon">✨</div>
-          <h3>AI Generate</h3>
-          <p>Turn a script into a video</p>
-        </button>
-      </div>
+      {!file ? (
+        <div className="create-tools">
+          <input 
+            type="file" 
+            accept="video/mp4,video/x-m4v,video/*" 
+            style={{ display: 'none' }} 
+            ref={fileInputRef}
+            onChange={handleFileChange}
+          />
+          <button className="tool-btn glass-panel" onClick={handleUploadClick}>
+            <div className="tool-icon upload-icon">📤</div>
+            <h3>Upload File</h3>
+            <p>MP4, MOV up to 10 mins</p>
+          </button>
+        </div>
+      ) : (
+        <form onSubmit={handleSubmit} className="upload-form">
+          <div className="glass-panel" style={{ padding: '1rem', borderRadius: '12px', marginBottom: '1rem' }}>
+            <p style={{ margin: '0 0 1rem 0' }}><strong>Selected:</strong> {file.name}</p>
+            <input 
+              type="text" 
+              placeholder="Title" 
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              className="search-input"
+              style={{ width: '100%', marginBottom: '1rem', padding: '0.8rem', background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px' }}
+            />
+            <textarea 
+              placeholder="Description (optional)" 
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              className="search-input"
+              style={{ width: '100%', marginBottom: '1rem', padding: '0.8rem', background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', minHeight: '80px' }}
+            />
+            <button type="submit" disabled={isUploading} className="pill-button primary" style={{ width: '100%' }}>
+              {isUploading ? "Uploading..." : "Publish Video"}
+            </button>
+            <button type="button" disabled={isUploading} onClick={() => setFile(null)} className="pill-button" style={{ width: '100%', marginTop: '0.5rem', background: 'transparent', border: '1px solid rgba(255,255,255,0.2)' }}>
+              Cancel
+            </button>
+            {message && <p style={{ marginTop: '1rem', fontSize: '0.9rem', color: 'var(--brand-green)' }}>{message}</p>}
+          </div>
+        </form>
+      )}
     </div>
   );
 }
