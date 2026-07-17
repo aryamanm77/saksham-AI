@@ -13,17 +13,30 @@ function App() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    let timeout = setTimeout(() => {
+      if (loading) {
+        setError("Firebase connection timed out. Check your Authorized Domains and Database Rules.");
+        setLoading(false);
+      }
+    }, 5000);
+
     try {
       const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+        clearTimeout(timeout);
         setUser(currentUser);
         setLoading(false);
       }, (err) => {
+        clearTimeout(timeout);
         console.error("Auth error:", err);
         setError(err.message);
         setLoading(false);
       });
-      return () => unsubscribe();
+      return () => {
+        clearTimeout(timeout);
+        unsubscribe();
+      };
     } catch (err) {
+      clearTimeout(timeout);
       console.error("Auth setup error:", err);
       setError(err.message);
       setLoading(false);

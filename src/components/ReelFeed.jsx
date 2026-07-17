@@ -15,15 +15,18 @@ export default function ReelFeed() {
     const unsubscribe = onValue(reelsRef, (snapshot) => {
       const data = snapshot.val();
       if (data) {
-        // Convert object to array, sort by createdAt (newest first)
         const reelsArray = Object.keys(data).map(key => ({
           id: key,
           ...data[key]
-        })).sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
-        setReels(reelsArray);
+        }));
+        setReels(reelsArray.reverse());
       } else {
         setReels([]);
       }
+      setLoading(false);
+    }, (error) => {
+      console.error("Database read error:", error);
+      setReels([]); // Fallback to empty
       setLoading(false);
     });
 
