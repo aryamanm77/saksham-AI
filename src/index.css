@@ -45,8 +45,14 @@ body {
   max-width: 1200px;
   margin: 0 auto;
   width: 100%;
-  padding: 80px 1rem 2rem 1rem; /* 80px top padding accounts for fixed navbar */
+  padding: 80px 1rem 80px 1rem; /* 80px top/bottom accounts for fixed navbars on mobile */
   gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .main-layout {
+    padding: 80px 1rem 2rem 1rem;
+  }
 }
 
 /* Typography */
