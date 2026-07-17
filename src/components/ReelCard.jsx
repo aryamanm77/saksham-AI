@@ -2,8 +2,10 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Heart, MessageCircle, Repeat2, Send, Bookmark, Library } from 'lucide-react';
 import './ReelCard.css';
 
-export default function ReelCard({ videoUrl, creator, title, description, tags, isPlaying }) {
-  const [liked, setLiked] = useState(false);
+export default function ReelCard({ videoUrl, creator, title, description, tags, resourceLink, isPlaying }) {
+  const [activeReaction, setActiveReaction] = useState(null);
+  const [showReactions, setShowReactions] = useState(false);
+  const [reposted, setReposted] = useState(false);
   const [saved, setSaved] = useState(false);
   const videoRef = useRef(null);
 
@@ -63,23 +65,46 @@ export default function ReelCard({ videoUrl, creator, title, description, tags, 
         </div>
 
         <div className="action-buttons">
-          <button className="action-btn" onClick={() => setLiked(!liked)}>
-            <div className={`icon-container glass-panel ${liked ? 'active-heart' : ''}`}>
-              <Heart fill={liked ? 'currentColor' : 'none'} size={22} />
-            </div>
-            <span>{liked ? '28.1k' : '28k'}</span>
-          </button>
+          <div 
+            className="reaction-container"
+            onMouseEnter={() => setShowReactions(true)}
+            onMouseLeave={() => setShowReactions(false)}
+          >
+            {showReactions && (
+              <div className="reaction-popup glass-panel">
+                <button onClick={() => { setActiveReaction('👍'); setShowReactions(false); }}>👍</button>
+                <button onClick={() => { setActiveReaction('🎉'); setShowReactions(false); }}>🎉</button>
+                <button onClick={() => { setActiveReaction('🤝'); setShowReactions(false); }}>🤝</button>
+                <button onClick={() => { setActiveReaction('❤️'); setShowReactions(false); }}>❤️</button>
+                <button onClick={() => { setActiveReaction('💡'); setShowReactions(false); }}>💡</button>
+              </div>
+            )}
+            <button 
+              className="action-btn" 
+              onClick={() => setActiveReaction(activeReaction ? null : '👍')}
+            >
+              <div className={`icon-container glass-panel ${activeReaction ? 'active-reaction' : ''}`}>
+                {activeReaction ? (
+                  <span style={{ fontSize: '1.2rem' }}>{activeReaction}</span>
+                ) : (
+                  <Heart fill="none" size={22} />
+                )}
+              </div>
+              <span>{activeReaction ? '28.1k' : '28k'}</span>
+            </button>
+          </div>
+          
           <button className="action-btn">
             <div className="icon-container glass-panel">
               <MessageCircle size={22} />
             </div>
             <span>912</span>
           </button>
-          <button className="action-btn">
-            <div className="icon-container glass-panel">
+          <button className="action-btn" onClick={() => setReposted(!reposted)}>
+            <div className={`icon-container glass-panel ${reposted ? 'active-repost' : ''}`}>
               <Repeat2 size={22} />
             </div>
-            <span>Repost</span>
+            <span>{reposted ? 'Reposted' : 'Repost'}</span>
           </button>
           <button className="action-btn">
             <div className="icon-container glass-panel">
@@ -93,12 +118,15 @@ export default function ReelCard({ videoUrl, creator, title, description, tags, 
             </div>
             <span>Save</span>
           </button>
-          <button className="action-btn resources-btn">
-            <div className="icon-container glass-panel brand-bg">
-              <div className="stacked-books">📚</div>
-            </div>
-            <span>Resources</span>
-          </button>
+          
+          {resourceLink && (
+            <button className="action-btn resources-btn" onClick={() => window.open(resourceLink, '_blank')}>
+              <div className="icon-container glass-panel brand-bg">
+                <div className="stacked-books">📚</div>
+              </div>
+              <span>Resources</span>
+            </button>
+          )}
         </div>
       </div>
     </div>

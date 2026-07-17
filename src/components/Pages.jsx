@@ -39,10 +39,11 @@ export function ExploreTab() {
   );
 }
 
-export function CreateTab() {
+export function CreateTab({ user }) {
   const [file, setFile] = useState(null);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+  const [resourceLink, setResourceLink] = useState('');
   const [isUploading, setIsUploading] = useState(false);
   const [message, setMessage] = useState('');
   const fileInputRef = useRef(null);
@@ -88,10 +89,12 @@ export function CreateTab() {
           videoUrl: data.secure_url,
           title: title,
           description: description,
+          resourceLink: resourceLink || null,
           creator: {
-            name: "Aryaman (You)",
-            role: "Developer",
-            avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&auto=format&fit=crop&w=256&q=80"
+            uid: user?.uid || "anonymous",
+            name: user?.displayName || "Anonymous",
+            role: "Creator",
+            avatar: user?.photoURL || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3"
           },
           tags: ["New"],
           createdAt: Date.now()
@@ -101,6 +104,7 @@ export function CreateTab() {
         setFile(null);
         setTitle('');
         setDescription('');
+        setResourceLink('');
       } else {
         setMessage("Failed to upload video.");
       }
@@ -153,6 +157,14 @@ export function CreateTab() {
               className="search-input"
               style={{ width: '100%', marginBottom: '1rem', padding: '0.8rem', background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', minHeight: '80px' }}
             />
+            <input 
+              type="url" 
+              placeholder="Resource Link (e.g. GitHub repo, PDF) (optional)" 
+              value={resourceLink}
+              onChange={(e) => setResourceLink(e.target.value)}
+              className="search-input"
+              style={{ width: '100%', marginBottom: '1rem', padding: '0.8rem', background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px' }}
+            />
             <button type="submit" disabled={isUploading} className="pill-button primary" style={{ width: '100%' }}>
               {isUploading ? "Uploading..." : "Publish Video"}
             </button>
@@ -167,7 +179,7 @@ export function CreateTab() {
   );
 }
 
-export function CommunityTab() {
+export function CommunityTab({ user }) {
   const threads = [
     { id: 1, author: 'Alex Chen', topic: 'Help with PyTorch gradients', replies: 14, time: '2h ago' },
     { id: 2, author: 'Sarah Jenkins', topic: 'Best resources for LLM fine-tuning?', replies: 32, time: '5h ago' },
@@ -200,23 +212,80 @@ export function CommunityTab() {
   );
 }
 
-export function ProfileTab() {
+import { get, set } from 'firebase/database';
+
+export function ProfileTab({ user }) {
+  const [profileData, setProfileData] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editForm, setEditForm] = useState({ name: '', handle: '', bio: '' });
+
+  useEffect(() => {
+    if (user) {
+      const userRef = ref(db, 'users/' + user.uid);
+      get(userRef).then(snapshot => {
+        if (snapshot.exists()) {
+          setProfileData(snapshot.val());
+          setEditForm({
+            name: snapshot.val().displayName || '',
+            handle: snapshot.val().handle || '',
+            bio: snapshot.val().bio || ''
+          });
+        }
+      });
+    }
+  }, [user]);
+
+  const handleSaveProfile = async () => {
+    if (user && profileData) {
+      const userRef = ref(db, 'users/' + user.uid);
+      const updatedData = {
+        ...profileData,
+        displayName: editForm.name,
+        handle: editForm.handle,
+        bio: editForm.bio
+      };
+      await set(userRef, updatedData);
+      setProfileData(updatedData);
+      setIsEditing(false);
+    }
+  };
+
+  if (!profileData) return <div className="page-container">Loading profile...</div>;
+
   return (
     <div className="page-container">
       <div className="profile-header">
         <img 
-          src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&auto=format&fit=crop&w=256&q=80" 
+          src={profileData.photoURL || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&auto=format&fit=crop&w=256&q=80"} 
           alt="Profile Avatar" 
           className="profile-avatar-large" 
         />
-        <div className="profile-info">
-          <h2>Aryaman</h2>
-          <p className="profile-handle">@aryamanm77</p>
-          <div className="profile-stats">
-            <div><strong>1,240</strong> XP</div>
-            <div><strong>14</strong> following</div>
-            <div><strong>8</strong> followers</div>
-          </div>
+        <div className="profile-info" style={{ flex: 1 }}>
+          {isEditing ? (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+              <input type="text" value={editForm.name} onChange={e => setEditForm({...editForm, name: e.target.value})} className="search-input" style={{ background: 'rgba(255,255,255,0.1)', padding: '0.5rem', borderRadius: '4px', border: 'none' }} placeholder="Name" />
+              <input type="text" value={editForm.handle} onChange={e => setEditForm({...editForm, handle: e.target.value})} className="search-input" style={{ background: 'rgba(255,255,255,0.1)', padding: '0.5rem', borderRadius: '4px', border: 'none' }} placeholder="Handle" />
+              <input type="text" value={editForm.bio} onChange={e => setEditForm({...editForm, bio: e.target.value})} className="search-input" style={{ background: 'rgba(255,255,255,0.1)', padding: '0.5rem', borderRadius: '4px', border: 'none' }} placeholder="Bio" />
+              <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.5rem' }}>
+                <button onClick={handleSaveProfile} className="pill-button primary" style={{ padding: '0.4rem 1rem', fontSize: '0.8rem' }}>Save</button>
+                <button onClick={() => setIsEditing(false)} className="pill-button" style={{ padding: '0.4rem 1rem', fontSize: '0.8rem', background: 'transparent', border: '1px solid rgba(255,255,255,0.2)' }}>Cancel</button>
+              </div>
+            </div>
+          ) : (
+            <>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                <h2>{profileData.displayName}</h2>
+                <button onClick={() => setIsEditing(true)} style={{ background: 'rgba(255,255,255,0.1)', border: 'none', color: 'white', padding: '0.3rem 0.8rem', borderRadius: '99px', fontSize: '0.8rem', cursor: 'pointer' }}>Edit</button>
+              </div>
+              <p className="profile-handle">{profileData.handle}</p>
+              <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: '0 0 0.8rem 0' }}>{profileData.bio}</p>
+              <div className="profile-stats">
+                <div><strong>{profileData.xp}</strong> XP</div>
+                <div><strong>{profileData.following}</strong> following</div>
+                <div><strong>{profileData.followers}</strong> followers</div>
+              </div>
+            </>
+          )}
         </div>
       </div>
 
