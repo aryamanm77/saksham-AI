@@ -51,10 +51,6 @@ function App() {
     return <div style={{ display: 'flex', height: '100vh', justifyContent: 'center', alignItems: 'center', color: 'white' }}>Loading App State...</div>;
   }
 
-  if (!user) {
-    return <Login />;
-  }
-
   return (
     <Router>
       <Routes>
@@ -65,6 +61,7 @@ function App() {
         <Route path="/profile" element={<ProfileTab user={user} />} />
       </Routes>
       <BottomNav />
+      {!user && <Login />}
     </Router>
   );
 }
