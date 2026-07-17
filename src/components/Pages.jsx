@@ -307,16 +307,6 @@ export function ProfileTab({ user }) {
   const [isEditing, setIsEditing] = useState(false);
   const [editForm, setEditForm] = useState({ name: '', handle: '', bio: '' });
 
-  if (!user) {
-    return (
-      <div className="page-container" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100vh', textAlign: 'center', padding: '2rem' }}>
-        <h2 style={{ marginBottom: '1rem' }}>Login to view Profile</h2>
-        <p style={{ color: 'var(--text-secondary)', marginBottom: '2rem' }}>You need an account to view and edit your profile.</p>
-        <Login />
-      </div>
-    );
-  }
-
   useEffect(() => {
     if (user) {
       const userRef = ref(db, 'users/' + user.uid);
@@ -371,6 +361,16 @@ export function ProfileTab({ user }) {
       });
     }
   }, [user]);
+
+  if (!user) {
+    return (
+      <div className="page-container" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100vh', textAlign: 'center', padding: '2rem' }}>
+        <h2 style={{ marginBottom: '1rem' }}>Login to view Profile</h2>
+        <p style={{ color: 'var(--text-secondary)', marginBottom: '2rem' }}>You need an account to view and edit your profile.</p>
+        <Login />
+      </div>
+    );
+  }
 
   const handleSaveProfile = async () => {
     if (user && profileData) {
