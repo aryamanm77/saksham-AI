@@ -1,7 +1,133 @@
-.reel-feed {
-  height: 100vh;
+.feed-container {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
   width: 100%;
-  overflow-y: scroll;
-  scroll-snap-type: y mandatory;
-  position: relative;
+}
+
+@media (min-width: 768px) {
+  .feed-container {
+    grid-template-columns: 2fr 5fr;
+  }
+}
+
+@media (min-width: 1024px) {
+  .feed-container {
+    grid-template-columns: 2fr 5fr 2.5fr;
+  }
+}
+
+.left-sidebar, .right-sidebar {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .left-sidebar {
+    display: block;
+    position: sticky;
+    top: 80px;
+    height: fit-content;
+  }
+}
+
+@media (min-width: 1024px) {
+  .right-sidebar {
+    display: block;
+    position: sticky;
+    top: 80px;
+    height: fit-content;
+  }
+}
+
+.profile-widget {
+  padding: 1rem;
+  text-align: center;
+}
+
+.profile-widget-bg {
+  height: 60px;
+  background: linear-gradient(135deg, var(--brand-green) 0%, var(--brand-cyan) 100%);
+  margin: -1rem -1rem 1rem -1rem;
+  border-radius: 8px 8px 0 0;
+}
+
+.profile-widget-avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  border: 2px solid var(--bg-panel);
+  margin-top: -46px;
+  object-fit: cover;
+  background-color: var(--bg-dark);
+}
+
+.profile-widget h3 {
+  margin-top: 0.5rem;
+  font-size: 1.1rem;
+}
+
+.profile-widget p {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+}
+
+.profile-widget-stats {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 1rem;
+  border-top: 1px solid var(--bg-panel-border);
+  font-size: 0.8rem;
+}
+
+.profile-widget-stats span {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.recommendations-widget {
+  padding: 1rem;
+}
+
+.recommendations-widget h3 {
+  font-size: 1rem;
+  margin-bottom: 1rem;
+}
+
+.recommendation-item {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-bottom: 1rem;
+}
+
+.recommendation-item img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.recommendation-info h4 {
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.recommendation-info p {
+  font-size: 0.75rem;
+  margin: 0;
+}
+
+.main-feed {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.loading-state, .empty-state {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  color: var(--text-secondary);
 }

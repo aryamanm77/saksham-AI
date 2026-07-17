@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import BottomNav from './components/BottomNav';
+import TopNavbar from './components/TopNavbar';
 import ReelFeed from './components/ReelFeed';
 import { ExploreTab, CreateTab, CommunityTab, ProfileTab } from './components/Pages';
 import Login from './components/Login';
@@ -57,14 +57,16 @@ function App() {
 
   return (
     <Router>
-      <Routes>
-        <Route path="/" element={<ReelFeed user={user} />} />
-        <Route path="/explore" element={<ExploreTab />} />
-        <Route path="/create" element={<CreateTab user={user} />} />
-        <Route path="/community" element={<CommunityTab user={user} />} />
-        <Route path="/profile" element={<ProfileTab user={user} />} />
-      </Routes>
-      <BottomNav />
+      <TopNavbar />
+      <main className="main-layout">
+        <Routes>
+          <Route path="/" element={<ReelFeed user={user} />} />
+          <Route path="/explore" element={<ExploreTab />} />
+          <Route path="/create" element={<CreateTab user={user} />} />
+          <Route path="/community" element={<CommunityTab user={user} />} />
+          <Route path="/profile" element={<ProfileTab user={user} />} />
+        </Routes>
+      </main>
     </Router>
   );
 }

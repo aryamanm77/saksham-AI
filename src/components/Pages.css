@@ -1,8 +1,9 @@
 .page-container {
-  height: 100%;
-  padding: 1.5rem;
-  padding-bottom: 100px; /* space for bottom nav */
-  overflow-y: auto;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 1rem;
+  padding-bottom: 2rem;
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
@@ -11,6 +12,10 @@
 .page-container.center-content {
   justify-content: center;
   align-items: center;
+}
+
+.page-header {
+  margin-bottom: 1rem;
 }
 
 .page-header h1 {
@@ -22,7 +27,8 @@
   font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 1px;
-  color: var(--text-secondary);
+  color: var(--brand-green);
+  text-transform: uppercase;
 }
 
 .search-bar {
@@ -71,8 +77,9 @@
   display: flex;
   align-items: center;
   gap: 1rem;
-  padding: 1rem;
+  padding: 1.5rem;
   border-radius: 16px;
+  margin-top: 1rem;
   background: linear-gradient(145deg, rgba(30,30,30,0.8), rgba(20,20,20,0.9));
   border: 1px solid rgba(255, 255, 255, 0.05);
 }

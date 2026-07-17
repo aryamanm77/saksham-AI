@@ -3,11 +3,9 @@ import ReelCard from './ReelCard';
 import './ReelFeed.css';
 import { db } from '../firebase';
 import { ref, onValue } from 'firebase/database';
-import AIMentor from './AIMentor';
 
-export default function ReelFeed() {
+export default function ReelFeed({ user }) {
   const [reels, setReels] = useState([]);
-  const [currentReelIndex, setCurrentReelIndex] = useState(0);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -33,35 +31,68 @@ export default function ReelFeed() {
     return () => unsubscribe();
   }, []);
 
-  const handleScroll = (e) => {
-    const container = e.target;
-    const scrollPosition = container.scrollTop;
-    const windowHeight = window.innerHeight;
-    const newIndex = Math.round(scrollPosition / windowHeight);
-    
-    if (newIndex !== currentReelIndex) {
-      setCurrentReelIndex(newIndex);
-    }
-  };
-
-  if (loading) {
-    return <div className="feed-container" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', color: 'white' }}>Loading videos...</div>;
-  }
-
-  if (reels.length === 0) {
-    return <div className="feed-container" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', color: 'white', padding: '2rem', textAlign: 'center' }}>No videos yet! Head to the Create tab to upload the first one.</div>;
-  }
-
   return (
-    <div className="reel-feed no-scrollbar" onScroll={handleScroll}>
-      {reels.map((reel, index) => (
-        <ReelCard 
-          key={reel.id}
-          {...reel}
-          isPlaying={index === currentReelIndex}
-        />
-      ))}
-      <AIMentor />
+    <div className="feed-container">
+      {/* Left Sidebar: Profile Widget */}
+      <aside className="left-sidebar">
+        <div className="profile-widget glass-panel">
+          <div className="profile-widget-bg"></div>
+          <img 
+            src={user?.photoURL || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&auto=format&fit=crop&w=256&q=80"} 
+            alt="Profile" 
+            className="profile-widget-avatar"
+          />
+          <h3>{user?.displayName || "Creator"}</h3>
+          <p>AI Engineer & Creator</p>
+          <div className="profile-widget-stats">
+            <div>Profile viewers <span>1,024</span></div>
+          </div>
+          <div className="profile-widget-stats" style={{ borderTop: 'none', paddingTop: '0.5rem' }}>
+            <div>Post impressions <span>54.1K</span></div>
+          </div>
+        </div>
+      </aside>
+
+      {/* Main Feed */}
+      <main className="main-feed">
+        {loading ? (
+          <div className="loading-state">Loading posts...</div>
+        ) : reels.length === 0 ? (
+          <div className="empty-state">No posts yet. Be the first to share!</div>
+        ) : (
+          reels.map((reel, index) => (
+            <ReelCard 
+              key={reel.id}
+              {...reel}
+              isPlaying={false} 
+            />
+          ))
+        )}
+      </main>
+
+      {/* Right Sidebar: Recommendations */}
+      <aside className="right-sidebar">
+        <div className="recommendations-widget glass-panel">
+          <h3>Add to your feed</h3>
+          <div className="recommendation-item">
+            <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=100&h=100&fit=crop" alt="Sarah" />
+            <div className="recommendation-info">
+              <h4>Sarah Chen</h4>
+              <p>LLM Researcher @ DeepMind</p>
+            </div>
+          </div>
+          <div className="recommendation-item">
+            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop" alt="David" />
+            <div className="recommendation-info">
+              <h4>David Park</h4>
+              <p>Building Agents @ OpenAI</p>
+            </div>
+          </div>
+          <button className="pill-button" style={{ width: '100%', marginTop: '0.5rem' }}>
+            View all recommendations
+          </button>
+        </div>
+      </aside>
     </div>
   );
 }
