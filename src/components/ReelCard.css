@@ -7,10 +7,34 @@
   overflow: hidden;
 }
 
+.video-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  cursor: pointer;
+}
+
 .reel-video {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+.play-icon-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 4rem;
+  color: rgba(255, 255, 255, 0.7);
+  pointer-events: none;
+  text-shadow: 0px 0px 20px rgba(0,0,0,0.5);
+  animation: popIn 0.2s ease-out;
+}
+
+@keyframes popIn {
+  from { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+  to { transform: translate(-50%, -50%) scale(1); opacity: 1; }
 }
 
 /* Floating Actions on the Right */

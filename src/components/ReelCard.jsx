@@ -16,17 +16,26 @@ export default function ReelCard({ id, videoUrl, creator, title, description, ta
   const [totalComments, setTotalComments] = useState(0);
   const [showComments, setShowComments] = useState(false);
   
+  const [isManuallyPaused, setIsManuallyPaused] = useState(false);
+  
   const videoRef = useRef(null);
 
   useEffect(() => {
     if (videoRef.current) {
-      if (isPlaying) {
-        videoRef.current.play().catch(err => console.log("Video auto-play blocked or failed:", err));
+      if (isPlaying && !isManuallyPaused) {
+        videoRef.current.play().catch(err => {
+          console.log("Video auto-play blocked or failed:", err);
+          setIsManuallyPaused(true); // Treat blocked autoplay as manually paused so they can tap to play
+        });
       } else {
         videoRef.current.pause();
       }
     }
-  }, [isPlaying]);
+  }, [isPlaying, isManuallyPaused]);
+
+  const togglePlay = () => {
+    setIsManuallyPaused(!isManuallyPaused);
+  };
 
   useEffect(() => {
     if (!id) return;
@@ -124,14 +133,21 @@ export default function ReelCard({ id, videoUrl, creator, title, description, ta
 
   return (
     <div className="reel-card">
-      <video 
-        ref={videoRef}
-        src={videoUrl}
-        className="reel-video"
-        loop
-        muted
-        playsInline
-      />
+      <div className="video-container" onClick={togglePlay}>
+        <video 
+          ref={videoRef}
+          src={videoUrl}
+          className="reel-video"
+          loop
+          muted
+          playsInline
+        />
+        {isManuallyPaused && (
+          <div className="play-icon-overlay">
+            ▶
+          </div>
+        )}
+      </div>
       
       {/* Right side floating actions */}
       <div className="floating-actions">

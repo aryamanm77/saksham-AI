@@ -1,0 +1,276 @@
+{
+  "reels": {
+    "post_1": {
+      "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",
+      "title": "Future of AI Robotics",
+      "description": "Exploring advanced robotics and artificial intelligence integration. What are your thoughts on this tech?",
+      "tags": ["AI", "Robotics", "Tech", "Future"],
+      "creator": { "name": "Tech Insider", "avatar": "https://ui-avatars.com/api/?name=Tech+Insider&background=0D8ABC&color=fff" },
+      "timestamp": 1690000000000
+    },
+    "post_2": {
+      "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+      "title": "Google Tech Showcase",
+      "description": "A look at modern software ecosystems and seamless streaming technologies.",
+      "tags": ["Software", "Google", "Streaming"],
+      "creator": { "name": "Code Ninja", "avatar": "https://ui-avatars.com/api/?name=Code+Ninja&background=181818&color=fff" },
+      "timestamp": 1690000001000
+    },
+    "post_3": {
+      "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+      "title": "Open Source Animation Tech",
+      "description": "How open-source software like Blender is changing the landscape of 3D animation and machine rendering.",
+      "tags": ["OpenSource", "Blender", "3D", "Animation"],
+      "creator": { "name": "Dev Studio", "avatar": "https://ui-avatars.com/api/?name=Dev+Studio&background=4CAF50&color=fff" },
+      "timestamp": 1690000002000
+    },
+    "post_4": {
+      "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4",
+      "title": "Sintel: 3D Masterpiece",
+      "description": "High-fidelity rendering pushed to the limits. Check out these graphical capabilities.",
+      "tags": ["Render", "Graphics", "CGI"],
+      "creator": { "name": "CGI Master", "avatar": "https://ui-avatars.com/api/?name=CGI+Master&background=F44336&color=fff" },
+      "timestamp": 1690000003000
+    },
+    "post_5": {
+      "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
+      "title": "Cloud Server Scaling",
+      "description": "Visualizing how server racks handle massive parallel escapes in compute loads.",
+      "tags": ["Cloud", "Servers", "AWS", "Tech"],
+      "creator": { "name": "Cloud Guru", "avatar": "https://ui-avatars.com/api/?name=Cloud+Guru&background=FF9800&color=fff" },
+      "timestamp": 1690000004000
+    },
+    "post_6": {
+      "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
+      "title": "Gamification of AI",
+      "description": "How gamified interfaces are training the next generation of large language models.",
+      "tags": ["LLM", "AI", "Gaming"],
+      "creator": { "name": "AI Gamer", "avatar": "https://ui-avatars.com/api/?name=AI+Gamer&background=9C27B0&color=fff" },
+      "timestamp": 1690000005000
+    },
+    "post_7": {
+      "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4",
+      "title": "Self-Driving Tech",
+      "description": "Autonomous joyrides powered by computer vision and deep learning.",
+      "tags": ["Autonomous", "SelfDriving", "DeepLearning"],
+      "creator": { "name": "Auto Tech", "avatar": "https://ui-avatars.com/api/?name=Auto+Tech&background=00BCD4&color=fff" },
+      "timestamp": 1690000006000
+    },
+    "post_8": {
+      "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4",
+      "title": "Tech Meets Terrain",
+      "description": "Advanced traction control systems analyzing dirt and street data in real-time.",
+      "tags": ["Engineering", "Automotive", "Systems"],
+      "creator": { "name": "Mech Eng", "avatar": "https://ui-avatars.com/api/?name=Mech+Eng&background=607D8B&color=fff" },
+      "timestamp": 1690000007000
+    },
+    "post_9": {
+      "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4",
+      "title": "Server Meltdowns",
+      "description": "Why thermal management in data centers is the biggest hurdle for AI scale.",
+      "tags": ["DataCenter", "Hardware", "Cooling"],
+      "creator": { "name": "Hardware Hub", "avatar": "https://ui-avatars.com/api/?name=Hardware+Hub&background=E91E63&color=fff" },
+      "timestamp": 1690000008000
+    },
+    "post_10": {
+      "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/VolkswagenGTIReview.mp4",
+      "title": "Automated Testing",
+      "description": "Reviewing the automated safety tests of modern computer-assisted vehicles.",
+      "tags": ["Testing", "QA", "Automation"],
+      "creator": { "name": "QA Tester", "avatar": "https://ui-avatars.com/api/?name=QA+Tester&background=3F51B5&color=fff" },
+      "timestamp": 1690000009000
+    },
+    "post_11": {
+      "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",
+      "title": "Neural Link Interfaces",
+      "description": "Brain-computer interfaces are getting closer to reality. Here is a conceptual breakdown.",
+      "tags": ["BCI", "NeuralLink", "Cyborg"],
+      "creator": { "name": "Tech Insider", "avatar": "https://ui-avatars.com/api/?name=Tech+Insider&background=0D8ABC&color=fff" },
+      "timestamp": 1690000010000
+    },
+    "post_12": {
+      "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+      "title": "Streaming Optimization",
+      "description": "How variable bitrate encoding saves petabytes of bandwidth daily.",
+      "tags": ["Video", "Encoding", "Bandwidth"],
+      "creator": { "name": "Code Ninja", "avatar": "https://ui-avatars.com/api/?name=Code+Ninja&background=181818&color=fff" },
+      "timestamp": 1690000011000
+    },
+    "post_13": {
+      "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+      "title": "Procedural Generation",
+      "description": "Using algorithms to build infinite 3D worlds in real-time.",
+      "tags": ["Algorithms", "ProcGen", "Dev"],
+      "creator": { "name": "Dev Studio", "avatar": "https://ui-avatars.com/api/?name=Dev+Studio&background=4CAF50&color=fff" },
+      "timestamp": 1690000012000
+    },
+    "post_14": {
+      "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4",
+      "title": "GPU Acceleration",
+      "description": "Breaking down how modern GPUs handle ray tracing so efficiently.",
+      "tags": ["GPU", "RayTracing", "Hardware"],
+      "creator": { "name": "CGI Master", "avatar": "https://ui-avatars.com/api/?name=CGI+Master&background=F44336&color=fff" },
+      "timestamp": 1690000013000
+    },
+    "post_15": {
+      "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
+      "title": "Kubernetes Clusters",
+      "description": "Visual representation of pods escaping failing nodes.",
+      "tags": ["K8s", "DevOps", "Infrastructure"],
+      "creator": { "name": "Cloud Guru", "avatar": "https://ui-avatars.com/api/?name=Cloud+Guru&background=FF9800&color=fff" },
+      "timestamp": 1690000014000
+    },
+    "post_16": {
+      "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
+      "title": "Machine Learning Models",
+      "description": "Training models to play games better than humans.",
+      "tags": ["ML", "Gaming", "Python"],
+      "creator": { "name": "AI Gamer", "avatar": "https://ui-avatars.com/api/?name=AI+Gamer&background=9C27B0&color=fff" },
+      "timestamp": 1690000015000
+    },
+    "post_17": {
+      "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4",
+      "title": "LiDAR Mapping",
+      "description": "How point clouds create 3D maps for autonomous navigation.",
+      "tags": ["LiDAR", "Mapping", "Sensors"],
+      "creator": { "name": "Auto Tech", "avatar": "https://ui-avatars.com/api/?name=Auto+Tech&background=00BCD4&color=fff" },
+      "timestamp": 1690000016000
+    },
+    "post_18": {
+      "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4",
+      "title": "IoT Sensors",
+      "description": "Connecting everyday vehicles to the Internet of Things.",
+      "tags": ["IoT", "Connected", "Sensors"],
+      "creator": { "name": "Mech Eng", "avatar": "https://ui-avatars.com/api/?name=Mech+Eng&background=607D8B&color=fff" },
+      "timestamp": 1690000017000
+    },
+    "post_19": {
+      "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4",
+      "title": "Cybersecurity Threats",
+      "description": "Analyzing how system meltdowns are triggered by DDOS attacks.",
+      "tags": ["Cybersecurity", "DDOS", "Networking"],
+      "creator": { "name": "Hardware Hub", "avatar": "https://ui-avatars.com/api/?name=Hardware+Hub&background=E91E63&color=fff" },
+      "timestamp": 1690000018000
+    },
+    "post_20": {
+      "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/VolkswagenGTIReview.mp4",
+      "title": "Smart UI/UX",
+      "description": "Reviewing the touchscreen interfaces in modern tech-heavy cars.",
+      "tags": ["UI", "UX", "Design"],
+      "creator": { "name": "QA Tester", "avatar": "https://ui-avatars.com/api/?name=QA+Tester&background=3F51B5&color=fff" },
+      "timestamp": 1690000019000
+    },
+    "post_21": {
+      "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",
+      "title": "Quantum Computing",
+      "description": "A glimpse into what the quantum future looks like.",
+      "tags": ["Quantum", "Physics", "Computing"],
+      "creator": { "name": "Tech Insider", "avatar": "https://ui-avatars.com/api/?name=Tech+Insider&background=0D8ABC&color=fff" },
+      "timestamp": 1690000020000
+    },
+    "post_22": {
+      "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+      "title": "Web3 Architecture",
+      "description": "Decentralized video hosting solutions explained.",
+      "tags": ["Web3", "Blockchain", "Hosting"],
+      "creator": { "name": "Code Ninja", "avatar": "https://ui-avatars.com/api/?name=Code+Ninja&background=181818&color=fff" },
+      "timestamp": 1690000021000
+    },
+    "post_23": {
+      "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+      "title": "AR vs VR",
+      "description": "Which reality will dominate the enterprise market?",
+      "tags": ["AR", "VR", "Enterprise"],
+      "creator": { "name": "Dev Studio", "avatar": "https://ui-avatars.com/api/?name=Dev+Studio&background=4CAF50&color=fff" },
+      "timestamp": 1690000022000
+    },
+    "post_24": {
+      "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4",
+      "title": "Next-Gen APIs",
+      "description": "GraphQL vs REST in high-performance environments.",
+      "tags": ["API", "GraphQL", "REST"],
+      "creator": { "name": "CGI Master", "avatar": "https://ui-avatars.com/api/?name=CGI+Master&background=F44336&color=fff" },
+      "timestamp": 1690000023000
+    },
+    "post_25": {
+      "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
+      "title": "Serverless Functions",
+      "description": "Scaling to zero: the good, the bad, and the cold starts.",
+      "tags": ["Serverless", "AWSLambda", "Functions"],
+      "creator": { "name": "Cloud Guru", "avatar": "https://ui-avatars.com/api/?name=Cloud+Guru&background=FF9800&color=fff" },
+      "timestamp": 1690000024000
+    },
+    "post_26": {
+      "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
+      "title": "Python for Data Science",
+      "description": "Why Python continues to dominate the data analytics space.",
+      "tags": ["Python", "Data", "Analytics"],
+      "creator": { "name": "AI Gamer", "avatar": "https://ui-avatars.com/api/?name=AI+Gamer&background=9C27B0&color=fff" },
+      "timestamp": 1690000025000
+    },
+    "post_27": {
+      "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4",
+      "title": "React vs Vue",
+      "description": "A quick look at component lifecycle differences.",
+      "tags": ["ReactJS", "VueJS", "Frontend"],
+      "creator": { "name": "Auto Tech", "avatar": "https://ui-avatars.com/api/?name=Auto+Tech&background=00BCD4&color=fff" },
+      "timestamp": 1690000026000
+    },
+    "post_28": {
+      "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4",
+      "title": "Database Indexing",
+      "description": "Speed up your queries by 100x with proper B-Tree indexing.",
+      "tags": ["Database", "SQL", "Optimization"],
+      "creator": { "name": "Mech Eng", "avatar": "https://ui-avatars.com/api/?name=Mech+Eng&background=607D8B&color=fff" },
+      "timestamp": 1690000027000
+    },
+    "post_29": {
+      "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4",
+      "title": "Docker Containers",
+      "description": "Containerizing your monolithic application step-by-step.",
+      "tags": ["Docker", "Containers", "Microservices"],
+      "creator": { "name": "Hardware Hub", "avatar": "https://ui-avatars.com/api/?name=Hardware+Hub&background=E91E63&color=fff" },
+      "timestamp": 1690000028000
+    },
+    "post_30": {
+      "videoUrl": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/VolkswagenGTIReview.mp4",
+      "title": "TypeScript Benefits",
+      "description": "Why static typing saves you hours of debugging in production.",
+      "tags": ["TypeScript", "JavaScript", "Coding"],
+      "creator": { "name": "QA Tester", "avatar": "https://ui-avatars.com/api/?name=QA+Tester&background=3F51B5&color=fff" },
+      "timestamp": 1690000029000
+    }
+  },
+  "users": {
+    "tech_insider_1": {
+      "uid": "tech_insider_1",
+      "displayName": "Tech Insider",
+      "email": "insider@tech.ai",
+      "photoURL": "https://ui-avatars.com/api/?name=Tech+Insider&background=0D8ABC&color=fff",
+      "handle": "@techinsider",
+      "bio": "Sharing the latest in AI and tech.",
+      "xp": 500,
+      "followers": 120,
+      "following": 45,
+      "joinedAt": 1690000000000
+    }
+  },
+  "likes": {
+    "post_1": { "tech_insider_1": "💡" },
+    "post_2": { "tech_insider_1": "👍" },
+    "post_3": { "tech_insider_1": "❤️" }
+  },
+  "comments": {
+    "post_1": {
+      "comment_1": {
+        "userId": "tech_insider_1",
+        "text": "The integration of neural networks here is incredible.",
+        "timestamp": 1690000005000,
+        "user": {
+          "displayName": "Tech Insider",
+          "photoURL": "https://ui-avatars.com/api/?name=Tech+Insider&background=0D8ABC&color=fff"
+        }
+      }
+    }
+  }
+}
