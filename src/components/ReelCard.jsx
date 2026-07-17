@@ -22,19 +22,32 @@ export default function ReelCard({ id, videoUrl, creator, title, description, ta
 
   useEffect(() => {
     if (videoRef.current) {
-      if (isPlaying && !isManuallyPaused) {
+      if (isPlaying) {
+        // When scrolled into view, attempt autoplay
         videoRef.current.play().catch(err => {
           console.log("Video auto-play blocked or failed:", err);
-          setIsManuallyPaused(true); // Treat blocked autoplay as manually paused so they can tap to play
+          setIsManuallyPaused(true); // Show play button if autoplay fails
         });
       } else {
+        // When scrolled away, pause and reset state
         videoRef.current.pause();
+        setIsManuallyPaused(false);
       }
     }
-  }, [isPlaying, isManuallyPaused]);
+  }, [isPlaying]);
 
   const togglePlay = () => {
-    setIsManuallyPaused(!isManuallyPaused);
+    if (videoRef.current) {
+      if (videoRef.current.paused) {
+        // Direct synchronous play on user interaction!
+        videoRef.current.play().then(() => {
+          setIsManuallyPaused(false);
+        }).catch(err => console.log(err));
+      } else {
+        videoRef.current.pause();
+        setIsManuallyPaused(true);
+      }
+    }
   };
 
   useEffect(() => {
