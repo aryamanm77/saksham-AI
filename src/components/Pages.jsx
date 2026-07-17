@@ -348,6 +348,26 @@ export function ProfileTab({ user }) {
             bio: fallbackData.bio
           });
         }
+      }).catch(err => {
+        console.error("Firebase Database Error:", err);
+        // Fallback if database rules prevent reading (e.g. not in Test Mode)
+        const errorFallbackData = {
+          uid: user.uid,
+          displayName: user.displayName || 'Anonymous',
+          email: user.email,
+          photoURL: user.photoURL,
+          handle: '@' + (user.email ? user.email.split('@')[0] : 'user'),
+          bio: 'Error loading profile. Check Firebase Database Rules!',
+          xp: 0,
+          followers: 0,
+          following: 0
+        };
+        setProfileData(errorFallbackData);
+        setEditForm({
+          name: errorFallbackData.displayName,
+          handle: errorFallbackData.handle,
+          bio: errorFallbackData.bio
+        });
       });
     }
   }, [user]);
