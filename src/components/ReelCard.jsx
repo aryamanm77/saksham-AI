@@ -16,39 +16,19 @@ export default function ReelCard({ id, videoUrl, creator, title, description, ta
   const [totalComments, setTotalComments] = useState(0);
   const [showComments, setShowComments] = useState(false);
   
-  const [isManuallyPaused, setIsManuallyPaused] = useState(false);
-  
   const videoRef = useRef(null);
 
   useEffect(() => {
     if (videoRef.current) {
       if (isPlaying) {
-        // When scrolled into view, attempt autoplay
         videoRef.current.play().catch(err => {
           console.log("Video auto-play blocked or failed:", err);
-          setIsManuallyPaused(true); // Show play button if autoplay fails
         });
       } else {
-        // When scrolled away, pause and reset state
         videoRef.current.pause();
-        setIsManuallyPaused(false);
       }
     }
   }, [isPlaying]);
-
-  const togglePlay = () => {
-    if (videoRef.current) {
-      if (videoRef.current.paused) {
-        // Direct synchronous play on user interaction!
-        videoRef.current.play().then(() => {
-          setIsManuallyPaused(false);
-        }).catch(err => console.log(err));
-      } else {
-        videoRef.current.pause();
-        setIsManuallyPaused(true);
-      }
-    }
-  };
 
   useEffect(() => {
     if (!id) return;
@@ -146,7 +126,7 @@ export default function ReelCard({ id, videoUrl, creator, title, description, ta
 
   return (
     <div className="reel-card">
-      <div className="video-container" onClick={togglePlay}>
+      <div className="video-container">
         <video 
           ref={videoRef}
           src={videoUrl}
@@ -155,11 +135,6 @@ export default function ReelCard({ id, videoUrl, creator, title, description, ta
           muted
           playsInline
         />
-        {isManuallyPaused && (
-          <div className="play-icon-overlay">
-            ▶
-          </div>
-        )}
       </div>
       
       {/* Right side floating actions */}
