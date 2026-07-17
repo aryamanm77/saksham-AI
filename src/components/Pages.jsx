@@ -307,11 +307,72 @@ export function CreateTab({ user }) {
 }
 
 export function CommunityTab({ user }) {
-  const threads = [
-    { id: 1, author: 'Alex Chen', topic: 'Help with PyTorch gradients', replies: 14, time: '2h ago' },
-    { id: 2, author: 'Sarah Jenkins', topic: 'Best resources for LLM fine-tuning?', replies: 32, time: '5h ago' },
-    { id: 3, author: 'David Kim', topic: 'Looking for hackathon teammates!', replies: 8, time: '1d ago' }
-  ];
+  const [threads, setThreads] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [isComposing, setIsComposing] = useState(false);
+  const [newTopic, setNewTopic] = useState('');
+  const [newDescription, setNewDescription] = useState('');
+
+  useEffect(() => {
+    const communityRef = ref(db, 'community_posts');
+    const unsubscribe = onValue(communityRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        const postsArray = Object.keys(data).map(key => ({
+          id: key,
+          ...data[key]
+        }));
+        // Sort newest first
+        setThreads(postsArray.reverse());
+      } else {
+        setThreads([]);
+      }
+      setLoading(false);
+    }, (error) => {
+      console.error("Database read error:", error);
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  const handlePostSubmit = async (e) => {
+    e.preventDefault();
+    if (!newTopic.trim()) return;
+
+    if (!user) {
+      alert("Please login to post in the community!");
+      return;
+    }
+
+    const newPost = {
+      topic: newTopic,
+      description: newDescription,
+      author: user.displayName || 'Anonymous',
+      authorId: user.uid,
+      replies: 0,
+      createdAt: Date.now()
+    };
+
+    try {
+      const communityRef = ref(db, 'community_posts');
+      await push(communityRef, newPost);
+      setNewTopic('');
+      setNewDescription('');
+      setIsComposing(false);
+    } catch (err) {
+      console.error("Error creating post:", err);
+      alert("Failed to create post. Check your connection.");
+    }
+  };
+
+  const formatTime = (timestamp) => {
+    if (!timestamp) return 'Just now';
+    const mins = Math.floor((Date.now() - timestamp) / 60000);
+    if (mins < 60) return `${mins}m ago`;
+    if (mins < 1440) return `${Math.floor(mins/60)}h ago`;
+    return `${Math.floor(mins/1440)}d ago`;
+  };
 
   return (
     <div className="page-container">
@@ -321,20 +382,56 @@ export function CommunityTab({ user }) {
       </header>
 
       <div className="threads-list">
-        {threads.map(thread => (
-          <div key={thread.id} className="thread-card glass-panel">
-            <h4>{thread.topic}</h4>
-            <div className="thread-meta">
-              <span>By {thread.author}</span>
-              <span>•</span>
-              <span>{thread.replies} replies</span>
-              <span>•</span>
-              <span>{thread.time}</span>
+        {loading ? (
+          <p style={{ textAlign: 'center', marginTop: '2rem' }}>Loading threads...</p>
+        ) : threads.length === 0 ? (
+          <p style={{ textAlign: 'center', marginTop: '2rem', color: 'var(--text-secondary)' }}>No posts yet. Start a conversation!</p>
+        ) : (
+          threads.map(thread => (
+            <div key={thread.id} className="thread-card glass-panel" style={{ padding: '1rem', marginBottom: '1rem', borderRadius: '12px' }}>
+              <h4 style={{ margin: '0 0 0.5rem 0' }}>{thread.topic}</h4>
+              {thread.description && <p style={{ margin: '0 0 1rem 0', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>{thread.description}</p>}
+              <div className="thread-meta" style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', display: 'flex', gap: '0.5rem' }}>
+                <span>By {thread.author}</span>
+                <span>•</span>
+                <span>{thread.replies || 0} replies</span>
+                <span>•</span>
+                <span>{formatTime(thread.createdAt)}</span>
+              </div>
             </div>
-          </div>
-        ))}
+          ))
+        )}
       </div>
-      <button className="pill-button primary compose-btn">New Post</button>
+
+      {isComposing ? (
+        <form onSubmit={handlePostSubmit} className="glass-panel" style={{ position: 'fixed', bottom: '80px', left: '10px', right: '10px', padding: '1rem', borderRadius: '12px', zIndex: 100 }}>
+          <h3 style={{ margin: '0 0 1rem 0' }}>New Thread</h3>
+          <input 
+            type="text" 
+            placeholder="Topic Title" 
+            value={newTopic}
+            onChange={e => setNewTopic(e.target.value)}
+            className="search-input"
+            required
+            style={{ width: '100%', marginBottom: '1rem', padding: '0.8rem', background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px' }}
+          />
+          <textarea 
+            placeholder="Details (optional)" 
+            value={newDescription}
+            onChange={e => setNewDescription(e.target.value)}
+            className="search-input"
+            style={{ width: '100%', marginBottom: '1rem', padding: '0.8rem', background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', minHeight: '60px' }}
+          />
+          <div style={{ display: 'flex', gap: '0.5rem' }}>
+            <button type="submit" className="pill-button primary" style={{ flex: 1 }}>Post</button>
+            <button type="button" onClick={() => setIsComposing(false)} className="pill-button" style={{ flex: 1, background: 'transparent', border: '1px solid rgba(255,255,255,0.2)' }}>Cancel</button>
+          </div>
+        </form>
+      ) : (
+        <button onClick={() => setIsComposing(true)} className="pill-button primary compose-btn" style={{ position: 'fixed', bottom: '80px', right: '20px', zIndex: 10, boxShadow: '0 4px 12px rgba(0,0,0,0.5)' }}>
+          + New Post
+        </button>
+      )}
     </div>
   );
 }
