@@ -38,23 +38,6 @@ body {
   flex-direction: column;
 }
 
-/* Global Layout Containers */
-.main-layout {
-  display: flex;
-  justify-content: center;
-  max-width: 1200px;
-  margin: 0 auto;
-  width: 100%;
-  padding: 80px 1rem 80px 1rem; /* 80px top/bottom accounts for fixed navbars on mobile */
-  gap: 1.5rem;
-}
-
-@media (min-width: 768px) {
-  .main-layout {
-    padding: 80px 1rem 2rem 1rem;
-  }
-}
-
 /* Typography */
 h1, h2, h3, h4, h5, h6 {
   color: var(--text-primary);

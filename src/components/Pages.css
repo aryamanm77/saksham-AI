@@ -1,9 +1,8 @@
 .page-container {
   width: 100%;
-  max-width: 800px;
   margin: 0 auto;
   padding: 1rem;
-  padding-bottom: 2rem;
+  padding-bottom: 80px; /* Clear the BottomNav */
   display: flex;
   flex-direction: column;
   gap: 1.5rem;

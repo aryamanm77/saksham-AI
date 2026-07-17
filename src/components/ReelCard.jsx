@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { ThumbsUp, MessageSquare, Repeat2, Send, Bookmark, Library, MoreHorizontal } from 'lucide-react';
+import { ThumbsUp, MessageSquare, Repeat2, Send, Library, Plus } from 'lucide-react';
 import './ReelCard.css';
 import { db } from '../firebase';
 import { ref, onValue, set, remove } from 'firebase/database';
@@ -27,6 +27,7 @@ export default function ReelCard({ id, videoUrl, creator, title, description, ta
       }
     }
   }, [isPlaying]);
+
   useEffect(() => {
     if (!id) return;
     
@@ -85,10 +86,8 @@ export default function ReelCard({ id, videoUrl, creator, title, description, ta
   const handleReaction = (reactionType) => {
     if (!currentUser) return alert("Please log in to react!");
     if (activeReaction === reactionType || (!reactionType && activeReaction)) {
-      // Remove reaction
       remove(ref(db, `likes/${id}/${currentUser.uid}`));
     } else {
-      // Add/Update reaction
       set(ref(db, `likes/${id}/${currentUser.uid}`), reactionType || '👍');
     }
     setShowReactions(false);
@@ -104,7 +103,7 @@ export default function ReelCard({ id, videoUrl, creator, title, description, ta
   };
 
   const handleShare = async () => {
-    const url = window.location.href; // In production this could link to specific post ?id=...
+    const url = window.location.href; 
     if (navigator.share) {
       try {
         await navigator.share({
@@ -120,60 +119,30 @@ export default function ReelCard({ id, videoUrl, creator, title, description, ta
       alert("Link copied to clipboard!");
     }
   };
-  // Format tags safely
-  const formattedTags = tags ? tags.join(' • ') : '';
+
+  const formattedTags = tags ? tags.map(t => `#${t}`).join(' ') : '';
 
   return (
     <div className="reel-card">
-      <div className="post-header">
-        <div className="creator-info">
-          <img src={creator.avatar} alt={creator.name} className="creator-avatar" />
-          <div className="creator-details">
-            <h4>{creator.name}</h4>
-            <p>{creator.role} • 2h</p>
-          </div>
+      <video 
+        ref={videoRef}
+        src={videoUrl}
+        className="reel-video"
+        loop
+        muted
+        playsInline
+      />
+      
+      {/* Right side floating actions */}
+      <div className="floating-actions">
+        <div className="action-creator">
+          <img src={creator.avatar} alt={creator.name} />
+          <button className="follow-btn"><Plus size={14} /></button>
         </div>
-        <button style={{ background: 'transparent', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer' }}>
-          <MoreHorizontal size={20} />
-        </button>
-      </div>
 
-      <div className="post-body">
-        <h3 className="post-title">{title}</h3>
-        {description && <p className="post-description">{description}</p>}
-        {formattedTags && (
-          <div className="tags-row">
-            <span className="tag-pill">{formattedTags}</span>
-          </div>
-        )}
-      </div>
-
-      <div className="video-container">
-        <video 
-          ref={videoRef}
-          src={videoUrl}
-          className="reel-video"
-          loop
-          muted
-          playsInline
-          controls={!isPlaying}
-        />
-        {!isPlaying && <div className="play-overlay">▶</div>}
-      </div>
-
-      <div className="post-stats">
-        <span>{totalReactions > 0 ? `${totalReactions} reactions` : 'Be the first to react'}</span>
-        <span>{totalComments} comments • {totalReposts} reposts</span>
-      </div>
-
-      <div className="post-actions">
-        <div 
-          className="reaction-container"
-          onMouseEnter={() => setShowReactions(true)}
-          onMouseLeave={() => setShowReactions(false)}
-        >
+        <div className="action-button-wrapper" onMouseEnter={() => setShowReactions(true)} onMouseLeave={() => setShowReactions(false)}>
           {showReactions && (
-            <div className="reaction-popup">
+            <div className="reaction-popup-vertical">
               <button onClick={() => handleReaction('👍')}>👍</button>
               <button onClick={() => handleReaction('🎉')}>🎉</button>
               <button onClick={() => handleReaction('🤝')}>🤝</button>
@@ -181,44 +150,69 @@ export default function ReelCard({ id, videoUrl, creator, title, description, ta
               <button onClick={() => handleReaction('💡')}>💡</button>
             </div>
           )}
-          <button 
-            className={`action-btn ${activeReaction ? 'active-reaction' : ''}`}
-            onClick={() => handleReaction(activeReaction ? null : '👍')}
-          >
-            {activeReaction ? (
-              <span style={{ fontSize: '1.2rem' }}>{activeReaction}</span>
-            ) : (
-              <ThumbsUp size={20} />
-            )}
-            <span>Like</span>
+          <button className={`action-btn ${activeReaction ? 'active' : ''}`} onClick={() => handleReaction(activeReaction ? null : '👍')}>
+            <div className="icon-circle">
+              {activeReaction ? <span>{activeReaction}</span> : <ThumbsUp size={24} />}
+            </div>
+            <span>{totalReactions}</span>
           </button>
         </div>
-        
-        <button className="action-btn" onClick={() => setShowComments(!showComments)}>
-          <MessageSquare size={20} />
-          <span>Comment</span>
-        </button>
-        
-        <button className={`action-btn ${reposted ? 'active-reaction' : ''}`} onClick={handleRepost}>
-          <Repeat2 size={20} />
-          <span>Repost</span>
-        </button>
-        
-        <button className="action-btn" onClick={handleShare}>
-          <Send size={20} />
-          <span>Send</span>
-        </button>
+
+        <div className="action-button-wrapper">
+          <button className="action-btn" onClick={() => setShowComments(true)}>
+            <div className="icon-circle">
+              <MessageSquare size={24} />
+            </div>
+            <span>{totalComments}</span>
+          </button>
+        </div>
+
+        <div className="action-button-wrapper">
+          <button className={`action-btn ${reposted ? 'active' : ''}`} onClick={handleRepost}>
+            <div className="icon-circle">
+              <Repeat2 size={24} />
+            </div>
+            <span>{totalReposts}</span>
+          </button>
+        </div>
+
+        <div className="action-button-wrapper">
+          <button className="action-btn" onClick={handleShare}>
+            <div className="icon-circle">
+              <Send size={24} />
+            </div>
+            <span>Share</span>
+          </button>
+        </div>
 
         {resourceLink && (
-          <button className="action-btn resources-btn" onClick={() => window.open(resourceLink, '_blank')}>
-            <Library size={20} />
-            <span>Resources</span>
-          </button>
+          <div className="action-button-wrapper">
+            <button className="action-btn" onClick={() => window.open(resourceLink, '_blank')}>
+              <div className="icon-circle resources-icon">
+                <Library size={24} />
+              </div>
+              <span>Resource</span>
+            </button>
+          </div>
         )}
       </div>
 
+      {/* Bottom overlay info */}
+      <div className="reel-info">
+        <h3>{creator.name}</h3>
+        <p className="reel-title">{title}</p>
+        {description && <p className="reel-description">{description}</p>}
+        {formattedTags && <p className="reel-tags">{formattedTags}</p>}
+      </div>
+
       {showComments && (
-        <Comments postId={id} currentUser={currentUser} />
+        <div className="comments-bottom-sheet">
+          <div className="comments-sheet-header">
+            <h4>{totalComments} Comments</h4>
+            <button onClick={() => setShowComments(false)} className="close-btn">×</button>
+          </div>
+          <Comments postId={id} currentUser={currentUser} />
+        </div>
       )}
     </div>
   );
