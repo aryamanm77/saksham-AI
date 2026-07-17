@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { Home, Compass, PlusSquare, Users, User, Search } from 'lucide-react';
+import { Home, Users, PlusSquare, Briefcase, UserCircle, Search } from 'lucide-react';
 import './TopNavbar.css';
 
 export default function TopNavbar() {
@@ -42,23 +42,23 @@ export default function TopNavbar() {
         {/* Navigation Links */}
         <div className="navbar-links">
           <NavLink to="/" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
-            <Home size={22} />
-            <span>Feed</span>
-          </NavLink>
-          <NavLink to="/explore" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
-            <Compass size={22} />
-            <span>Explore</span>
+            <Home size={24} strokeWidth={isActive ? 2.5 : 2} />
+            <span>Home</span>
           </NavLink>
           <NavLink to="/community" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
-            <Users size={22} />
-            <span>Community</span>
+            <Users size={24} strokeWidth={isActive ? 2.5 : 2} />
+            <span>Network</span>
           </NavLink>
           <NavLink to="/create" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
-            <PlusSquare size={22} />
+            <PlusSquare size={24} strokeWidth={isActive ? 2.5 : 2} />
             <span>Post</span>
           </NavLink>
+          <NavLink to="/explore" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
+            <Briefcase size={24} strokeWidth={isActive ? 2.5 : 2} />
+            <span>Jobs</span>
+          </NavLink>
           <NavLink to="/profile" className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}>
-            <User size={22} />
+            <UserCircle size={24} strokeWidth={isActive ? 2.5 : 2} />
             <span>Me</span>
           </NavLink>
         </div>
