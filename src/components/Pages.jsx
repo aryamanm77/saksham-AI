@@ -1,6 +1,6 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { db } from '../firebase';
-import { ref, push } from 'firebase/database';
+import { ref, push, get, set } from 'firebase/database';
 import { Search } from 'lucide-react';
 import './Pages.css';
 
@@ -212,7 +212,7 @@ export function CommunityTab({ user }) {
   );
 }
 
-import { get, set } from 'firebase/database';
+// get and set are imported at the top
 
 export function ProfileTab({ user }) {
   const [profileData, setProfileData] = useState(null);
