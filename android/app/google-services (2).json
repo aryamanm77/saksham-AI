@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "724876360668",
+    "firebase_url": "https://saksham-ai-50820-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "saksham-ai-50820",
+    "storage_bucket": "saksham-ai-50820.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:724876360668:android:3388abf436454610f1ed19",
+        "android_client_info": {
+          "package_name": "com.sakshamai.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "724876360668-kn5vmbg0bcanh6nqsil6kt6i3ta0v3j7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sakshamai.app",
+            "certificate_hash": "54daf3a5d8efea5b183671300d6ab7fc98dc6656"
+          }
+        },
+        {
+          "client_id": "724876360668-1cdpcu1461pkii02pmfq035uhputco2q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCskbjGszAHaefTYi8mU8Ihq2D2hjA9VNg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "724876360668-1cdpcu1461pkii02pmfq035uhputco2q.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

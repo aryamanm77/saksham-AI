@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Saksham AI</string>
+    <string name="title_activity_main">Saksham AI</string>
+    <string name="package_name">com.sakshamai.app</string>
+    <string name="custom_url_scheme">com.sakshamai.app</string>
+    <string name="server_client_id">724876360668-1cdpcu1461pkii02pmfq035uhputco2q.apps.googleusercontent.com</string>
+</resources>

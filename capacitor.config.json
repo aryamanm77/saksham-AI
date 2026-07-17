@@ -1,0 +1,12 @@
+{
+  "appId": "com.sakshamai.app",
+  "appName": "Saksham AI",
+  "webDir": "dist",
+  "plugins": {
+    "GoogleAuth": {
+      "scopes": ["profile", "email"],
+      "serverClientId": "724876360668-1cdpcu1461pkii02pmfq035uhputco2q.apps.googleusercontent.com",
+      "forceCodeForRefreshToken": true
+    }
+  }
+}

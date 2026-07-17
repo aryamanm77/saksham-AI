@@ -3,11 +3,12 @@ import { ThumbsUp, MessageSquare, Repeat2, Send, Library, Plus } from 'lucide-re
 import './ReelCard.css';
 import { db } from '../firebase';
 import { ref, onValue, set, remove, update } from 'firebase/database';
-import { Pencil } from 'lucide-react';
+import { Pencil, Volume2, VolumeX } from 'lucide-react';
 import Comments from './Comments';
 
 export default function ReelCard({ id, videoUrl, creator, title, description, tags, resourceLink, isPlaying, currentUser }) {
   const [activeReaction, setActiveReaction] = useState(null);
+  const [isMuted, setIsMuted] = useState(true);
   const [totalReactions, setTotalReactions] = useState(0);
   const [showReactions, setShowReactions] = useState(false);
   
@@ -158,9 +159,17 @@ export default function ReelCard({ id, videoUrl, creator, title, description, ta
           src={videoUrl}
           className="reel-video"
           loop
-          muted
+          muted={isMuted}
           playsInline
+          onClick={() => setIsMuted(!isMuted)}
         />
+        <button 
+          className="mute-btn" 
+          onClick={(e) => { e.stopPropagation(); setIsMuted(!isMuted); }}
+          style={{ position: 'absolute', top: '20px', right: '20px', background: 'rgba(0,0,0,0.5)', border: 'none', borderRadius: '50%', padding: '10px', color: 'white', zIndex: 10, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+        >
+          {isMuted ? <VolumeX size={20} /> : <Volume2 size={20} />}
+        </button>
       </div>
       
       {/* Right side floating actions */}
