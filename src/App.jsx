@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import BottomNav from './components/BottomNav';
 import ReelFeed from './components/ReelFeed';
-import { ExploreTab, PlaceholderTab } from './components/Pages';
+import { ExploreTab, CreateTab, CommunityTab, ProfileTab } from './components/Pages';
 
 function App() {
   return (
@@ -10,9 +10,9 @@ function App() {
       <Routes>
         <Route path="/" element={<ReelFeed />} />
         <Route path="/explore" element={<ExploreTab />} />
-        <Route path="/create" element={<PlaceholderTab title="Create" />} />
-        <Route path="/community" element={<PlaceholderTab title="Community" />} />
-        <Route path="/profile" element={<PlaceholderTab title="Profile" />} />
+        <Route path="/create" element={<CreateTab />} />
+        <Route path="/community" element={<CommunityTab />} />
+        <Route path="/profile" element={<ProfileTab />} />
       </Routes>
       <BottomNav />
     </Router>

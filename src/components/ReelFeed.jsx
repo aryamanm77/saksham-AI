@@ -6,7 +6,7 @@ import AIMentor from './AIMentor';
 const DUMMY_REELS = [
   {
     id: 1,
-    videoUrl: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+    videoUrl: 'https://cdn.coverr.co/videos/coverr-a-person-typing-on-a-laptop-4482/1080p.mp4',
     creator: {
       name: 'Anika Rao',
       role: 'Machine Learning mentor',
@@ -18,7 +18,7 @@ const DUMMY_REELS = [
   },
   {
     id: 2,
-    videoUrl: 'https://images.unsplash.com/photo-1555949963-aa79dcee981c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+    videoUrl: 'https://cdn.coverr.co/videos/coverr-software-code-on-a-computer-screen-2158/1080p.mp4',
     creator: {
       name: 'Rahul Sharma',
       role: 'Frontend Engineer',
@@ -27,6 +27,18 @@ const DUMMY_REELS = [
     title: 'React Hooks in 60s',
     description: 'Master useState and useEffect with this simple mental model.',
     tags: ['React', 'Intermediate', '+100 XP']
+  },
+  {
+    id: 3,
+    videoUrl: 'https://cdn.coverr.co/videos/coverr-server-room-1549/1080p.mp4',
+    creator: {
+      name: 'Priya Patel',
+      role: 'DevOps Architect',
+      avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
+    },
+    title: 'Kubernetes for absolute beginners',
+    description: 'Stop being afraid of containers. Here is how they actually work.',
+    tags: ['DevOps', 'Cloud', '+150 XP']
   }
 ];
 

@@ -1,18 +1,34 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Heart, MessageCircle, Repeat2, Send, Bookmark, Library } from 'lucide-react';
 import './ReelCard.css';
 
 export default function ReelCard({ videoUrl, creator, title, description, tags, isPlaying }) {
   const [liked, setLiked] = useState(false);
   const [saved, setSaved] = useState(false);
+  const videoRef = useRef(null);
+
+  useEffect(() => {
+    if (videoRef.current) {
+      if (isPlaying) {
+        videoRef.current.play().catch(err => console.log("Video auto-play blocked or failed:", err));
+      } else {
+        videoRef.current.pause();
+      }
+    }
+  }, [isPlaying]);
 
   return (
     <div className="reel-card">
       <div className="video-container">
-        {/* Placeholder for actual video player */}
-        <div className="video-placeholder" style={{ backgroundImage: `url(${videoUrl})` }}>
-           {!isPlaying && <div className="play-overlay">▶</div>}
-        </div>
+        <video 
+          ref={videoRef}
+          src={videoUrl}
+          className="reel-video"
+          loop
+          muted
+          playsInline
+        />
+        {!isPlaying && <div className="play-overlay">▶</div>}
       </div>
 
       <div className="auto-play-pill glass-panel">
